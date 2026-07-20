@@ -6,6 +6,8 @@ export enum ContentStatus {
   scheduled = 'scheduled', published = 'published', archived = 'archived',
 }
 
+export enum ContentKind { page = 'page', post = 'post' }
+
 export class ListContentsQuery {
   @IsOptional() @IsEnum(ContentStatus)
   status?: ContentStatus;

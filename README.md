@@ -39,14 +39,43 @@ node ../../scripts/e2e-verify.mjs
 ```
 Tài khoản demo (mật khẩu `Password123!`): `ngoc@a.vn` (editor, tenant A), `hai@a.vn` (manager, A), `ed@b.vn` (editor, tenant B).
 
-## Đã implement (slice #1)
+## Đã implement
+**Slice #1 — Auth + Content list**
 | Endpoint | Mô tả |
 |---|---|
 | `POST /v1/auth/login` | Xác thực → JWT (`sub`, `tenant_id`, `role`) · 200 |
 | `GET /v1/sites/:siteId/contents` | List content theo tenant (RLS), lọc `status`, cursor pagination |
+| `GET /v1/health` · `/health/ready` | Liveness · readiness (ping DB) |
 
-## Kết quả verify (10/10 pass)
-AC1 login 200+token · AC2 sai pass → 401 chung (chống enumeration) · AC3 list scoped + không leak field · filter status · AC4 no-token → 401 · **AC5 JWT tenant B xem site A → 0 rows (RLS cô lập)** · validation UUID → 400.
+**Slice #2 — Workflow duyệt (US-05/06)** · RBAC + state machine
+| Endpoint | Mô tả |
+|---|---|
+| `POST /v1/contents/:id/submission` | Gửi duyệt → `review` (BR-04: chặn nếu chưa có approver) |
+| `GET /v1/approvals` | Hàng chờ duyệt của tenant |
+| `POST /v1/contents/:id/approvals` | Duyệt/từ chối (**RBAC: manager/admin**) → approved/draft + bản ghi |
+| `GET /v1/contents/:id/approvals` | Lịch sử duyệt |
+
+**Slice #3 — Editor + versioning (US-01)** · block validation + slug + versioning
+| Endpoint | Mô tả |
+|---|---|
+| `POST /v1/sites/:siteId/contents` | Tạo content `draft` (slugify VN, BR-02 unique + gợi ý) |
+| `GET /v1/contents/:id` | Chi tiết + current version (không leak tenant/site id) |
+| `PATCH /v1/contents/:id` | Sửa title/slug (409 slug-conflict) |
+| `POST /v1/contents/:id/versions` | Lưu (autosave) → version mới (BR-01) + **validate block JSON** |
+| `GET /v1/contents/:id/versions` · `GET /v1/versions/:id` | Lịch sử / xem phiên bản |
+
+**Slice #4 — Publishing (US-14)** · state machine + BR-05/06 + RBAC
+| Endpoint | Mô tả |
+|---|---|
+| `POST /v1/contents/:id/publication` | Xuất bản (200) / lên lịch (202). **BR-05** chỉ approved; **RBAC admin/editor** |
+| `DELETE /v1/contents/:id/publication` | Gỡ xuất bản → draft (204) |
+| `GET /v1/sites/:siteId/sitemap` | URL đã xuất bản (BR-06: subdomain tạm khi chưa có domain) |
+
+## Kết quả verify (47/47 pass)
+- `scripts/e2e-verify.mjs` (10): login, RLS cô lập, không leak field, 401, validation.
+- `scripts/e2e-workflow.mjs` (12): submit→review, BR-04 no-approver→409, queue, **RBAC editor→403**, approve→approved+record, reject cần ghi chú (422), state machine invalid→409.
+- `scripts/e2e-editor.mjs` (13): create+slugify VN, slug trùng→409, save version (BR-01), **block JSON lạ→422**, versions, cross-tenant→404, tạo trên site tenant khác→404, slug sai format→400.
+- `scripts/e2e-publishing.mjs` (12): **BR-05 draft→409 not-approved**, RBAC contributor/manager→403, editor publish→200+url, BR-06 subdomain tạm, idempotent, sitemap, unpublish→204, lên lịch→202, lịch quá khứ→422, cross-tenant→404.
 
 ## Bảo mật (3 góc nhìn — xem specs/auth-content-list_design.md)
 - **Tenant isolation:** JWT mang `tenant_id` → `SET LOCAL app.current_tenant` → **PostgreSQL RLS**. API kết nối bằng role `app_login` (non-superuser → RLS thực thi). Defense-in-depth.

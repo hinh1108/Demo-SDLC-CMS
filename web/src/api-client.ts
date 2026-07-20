@@ -15,6 +15,9 @@ export interface Content {
   status: string; seo_score: number | null; updated_at: string;
 }
 export interface Page<T> { data: T[]; pagination: { next_cursor: string | null; has_more: boolean } }
+export interface Block { type: string; props?: Record<string, unknown>; children?: Block[] }
+export interface Version { id: string; content_id?: string; blocks?: Block[]; created_at: string }
+export interface ContentDetail extends Content { current_version: Version | null }
 
 const BASE = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL)
   || 'http://localhost:3001/v1';
@@ -54,5 +57,34 @@ export const api = {
     if (params.cursor) qs.set('cursor', params.cursor);
     const q = qs.toString();
     return request<Page<Content>>(`/sites/${siteId}/contents${q ? '?' + q : ''}`, {}, token);
+  },
+  // US-01 — editor
+  createContent(siteId: string, token: string, body: { kind: 'page' | 'post'; title: string; slug?: string }) {
+    return request<Content>(`/sites/${siteId}/contents`, { method: 'POST', body: JSON.stringify(body) }, token);
+  },
+  getContent(contentId: string, token: string) {
+    return request<ContentDetail>(`/contents/${contentId}`, {}, token);
+  },
+  updateContent(contentId: string, token: string, body: { title?: string; slug?: string }) {
+    return request<Content>(`/contents/${contentId}`, { method: 'PATCH', body: JSON.stringify(body) }, token);
+  },
+  saveVersion(contentId: string, token: string, blocks: Block[]) {
+    return request<Version>(`/contents/${contentId}/versions`, { method: 'POST', body: JSON.stringify({ blocks }) }, token);
+  },
+  listVersions(contentId: string, token: string) {
+    return request<Page<Version>>(`/contents/${contentId}/versions`, {}, token);
+  },
+  // US-14 — publishing
+  publish(contentId: string, token: string, scheduled_at?: string) {
+    return request<{ status: string; public_url: string; used_temp_subdomain: boolean; scheduled_at?: string }>(
+      `/contents/${contentId}/publication`,
+      { method: 'POST', body: JSON.stringify(scheduled_at ? { scheduled_at } : {}) }, token);
+  },
+  unpublish(contentId: string, token: string) {
+    return request<void>(`/contents/${contentId}/publication`, { method: 'DELETE' }, token);
+  },
+  getSitemap(siteId: string, token: string) {
+    return request<{ site_id: string; urls: Array<{ slug: string; public_url: string; published_at: string }> }>(
+      `/sites/${siteId}/sitemap`, {}, token);
   },
 };

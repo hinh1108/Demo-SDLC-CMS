@@ -27,12 +27,12 @@ Bảng tổng (23 feature):
 
 | ID | Feature | Epic | MoSCoW | Effort | Phụ thuộc | Status |
 |---|---|---|---|---|---|---|
-| US-01 | Soạn thảo no-code (block editor + version) | 1 | Must | L | Auth, DB | ⬜ |
+| US-01 | Soạn thảo no-code (block editor + version) | 1 | Must | L | Auth, DB | 🟡 API✅ |
 | US-02 | Thư viện media (WebP/CDN) | 1 | Should | M | US-01, storage | ⬜ |
 | US-03 | Template ngành | 1 | Could | M | US-01 | ⬜ |
 | US-04 | AI tạo site từ mô tả | 1 | Could | M | US-01, AI | ⬜ |
-| US-05 | Gửi duyệt | 2 | Must | S | US-01 | ⬜ |
-| US-06 | Duyệt/từ chối + bản ghi | 2 | Must | M | US-05, RBAC | ⬜ |
+| US-05 | Gửi duyệt | 2 | Must | S | US-01 | ✅ |
+| US-06 | Duyệt/từ chối + bản ghi | 2 | Must | M | US-05, RBAC | ✅ |
 | US-07 | Quản lý người dùng & vai trò | 2 | Must | M | Auth | ⬜ |
 | US-08 | Đa site / workspace | 2 | Could | M | US-07 | ⬜ |
 | US-09 | Metadata SEO + sitemap | 3 | Must | M | US-01, publish | ⬜ |
@@ -40,7 +40,7 @@ Bảng tổng (23 feature):
 | US-11 | AI gợi ý SEO | 3 | Should | M | US-09, AI | ⬜ |
 | US-12 | AEO (AI-search) | 3 | Could | M | US-09 | ⬜ |
 | US-13 | AI tạo/tối ưu ảnh | 3 | Could | M | US-02, AI | ⬜ |
-| US-14 | Xuất bản 1-chạm + tên miền | 4 | Must | L | US-06, render, CDN | ⬜ |
+| US-14 | Xuất bản 1-chạm + tên miền | 4 | Must | L | US-06, render, CDN | 🟡 API✅ |
 | US-15 | Lên lịch + preview/staging | 4 | Should | M | US-14, queue | ⬜ |
 | US-16 | Form & Lead (public) | 5 | Should | M | US-01, captcha | ⬜ |
 | US-17 | Tích hợp kênh (Zalo/FB/GA4/CRM) | 5 | Could | L | US-16 | ⬜ |

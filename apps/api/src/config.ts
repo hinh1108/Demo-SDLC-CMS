@@ -17,4 +17,6 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-change-me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '15m',
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  // Rate-limit đăng nhập: số lần / 60s / IP. Prod nên để thấp (10); dev/e2e nới rộng.
+  loginRateMax: parseInt(process.env.LOGIN_RATE_MAX || '10', 10),
 };

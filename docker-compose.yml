@@ -12,6 +12,7 @@ services:
       # Migrations tự apply lần init đầu (trước khi healthy)
       - ./db/0001_init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
       - ./db/0002_auth.sql:/docker-entrypoint-initdb.d/02_auth.sql:ro
+      - ./db/0003_publishing.sql:/docker-entrypoint-initdb.d/03_publishing.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d vietcms"]
       interval: 3s
@@ -45,6 +46,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required (set trong .env hoặc shell)}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      LOGIN_RATE_MAX: ${LOGIN_RATE_MAX:-100}   # dev/e2e; production nên để 10
     ports:
       - "3001:3001"
     # Resource limits (MUST-DO) — honored bởi docker compose v2

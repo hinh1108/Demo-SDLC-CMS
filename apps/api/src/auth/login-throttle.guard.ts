@@ -1,10 +1,10 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { problem } from '../common/problem';
+import { config } from '../config';
 
 // Throttle in-memory theo IP cho /auth/login (chống brute-force).
-// MVP: bản Redis sẽ thay ở slice sau (ADR-006).
+// Giới hạn cấu hình qua LOGIN_RATE_MAX. MVP: bản Redis sẽ thay ở slice sau (ADR-006).
 const WINDOW_MS = 60_000;
-const MAX = 10;
 const hits = new Map<string, number[]>();
 
 @Injectable()
@@ -14,7 +14,7 @@ export class LoginThrottleGuard implements CanActivate {
     const ip = req.ip || req.socket?.remoteAddress || 'unknown';
     const now = Date.now();
     const arr = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
-    if (arr.length >= MAX) {
+    if (arr.length >= config.loginRateMax) {
       throw problem(429, 'rate-limited', 'Too Many Requests', 'Thử lại sau ít phút.');
     }
     arr.push(now);
