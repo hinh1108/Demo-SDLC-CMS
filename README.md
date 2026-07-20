@@ -27,7 +27,7 @@ cp .env.example .env            # đặt JWT_SECRET
 docker compose up -d --build    # web + api + postgres (auto-migrate) + redis
 docker compose exec -T api node scripts/seed.mjs   # dữ liệu demo
 ```
-- **🖥️ Giao diện admin (browser): http://localhost:3000** — đăng nhập `ngoc@a.vn` / `Password123!`
+- **🖥️ Giao diện admin (Next.js): http://localhost:3000** — đăng nhập `ngoc@a.vn` / `Password123!` (BFF: JWT trong httpOnly cookie, code ở `apps/web/`)
 - API: http://localhost:3001/v1 · health `/v1/health` · readiness `/v1/health/ready`
 - Verify: `node scripts/e2e-verify.mjs` (và workflow/editor/publishing/seo)
 

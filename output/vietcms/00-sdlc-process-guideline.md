@@ -132,7 +132,7 @@
 | 2 Requirements | ✅ | `docs/ba-docs/ba-phase2-*`, `ba-phase3-*` (23 user stories) |
 | 3a Design UI/UX | ✅ | `output/vietcms/uiux-design/` (define, wireframe, design system, hi-fi mockup, handoff) |
 | 3b Design Technical | ✅ | `output/vietcms/architecture/` — overview + 9 ADR + data model + **OpenAPI 3.1 (lint pass)** + **DB schema/index verified bằng EXPLAIN thật (PG16)**; giải 7 Open Questions |
-| 4 Implementation | 🟡 **Đang làm** | Repo (git). 5 slice: Auth+Content list · Workflow (US-05/06) · Editor+versioning (US-01) · Publishing (US-14) · SEO+sitemap.xml (US-09) — chạy & verify **59/59 e2e**. Feature plan: `specs/feature-plan.md`. Xem `README.md`, `apps/api/` |
+| 4 Implementation | 🟡 **Đang làm** | Repo (git). Backend 5 slice (US-05/06/01/14/09) **59/59 e2e** + **Admin app Next.js** (`apps/web/`, BFF httpOnly cookie) chạy ở :3000. US-19 hoãn. Feature plan: `specs/feature-plan.md`. Xem `README.md` |
 | 5 Testing | 🟡 | Design handoff xong; usability test + QA checklist (UI) & test code chưa làm |
 | 6 Deployment | 🟡 **Đang làm** | Docker Compose deploy full-stack (api+pg+redis) — Dockerfile non-root + healthcheck + resource limits; verify 10/10 e2e. Xem `DEPLOY.md`. CI/CD + K8s chưa làm |
 | 7 Maintenance | ⬜ | — |

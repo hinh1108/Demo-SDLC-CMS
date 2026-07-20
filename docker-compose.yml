@@ -61,14 +61,17 @@ services:
     restart: unless-stopped
     # Liveness/readiness đã khai trong Dockerfile HEALTHCHECK (/v1/health)
 
-  # UI tối giản (SPA tĩnh) wired API — phục vụ ở :3000 (khớp CORS_ORIGIN)
+  # Admin app (Next.js) — BFF: JWT trong httpOnly cookie, proxy đính Bearer server-side
   web:
-    image: nginx:alpine
+    build:
+      context: ./apps/web
+    image: vietcms/web:${WEB_TAG:-0.1.0}
     container_name: vietcms-web
+    environment:
+      BACKEND_URL: http://api:3001/v1   # gọi API nội bộ compose (server-to-server, không CORS)
+      PORT: 3000
     ports:
-      - "3000:80"
-    volumes:
-      - ./web/public:/usr/share/nginx/html:ro
+      - "3000:3000"
     depends_on:
       - api
     restart: unless-stopped

@@ -211,20 +211,21 @@ Bảng tổng (23 feature):
 
 | ID | Màn | Map mockup | Endpoint dùng | MoSCoW | Status |
 |---|---|---|---|---|---|
-| FE-00 | Shell: login + nav + chọn site | — | `POST /auth/login` | Must | 🟡 MVP UI |
-| FE-01 | Danh sách nội dung + tạo bài | `05-mockup-dashboard` | `GET/POST /sites/:id/contents` | Must | 🟡 MVP UI |
-| FE-02 | Chi tiết + soạn version | `05-mockup-editor` | `GET /contents/:id`, `POST …/versions` | Must | 🟡 MVP UI |
-| FE-03 | Gửi duyệt + hàng chờ duyệt | `05-mockup-approval` | `POST …/submission`, `GET /approvals`, `POST …/approvals` | Must | 🟡 MVP UI |
-| FE-04 | Xuất bản / gỡ / lịch | `05-mockup-editor` | `POST/DELETE …/publication` | Must | 🟡 MVP UI |
-| FE-05 | SEO panel + điểm SEO | `05-mockup-editor` | `GET/PUT …/seo` | Must | 🟡 MVP UI |
-| FE-06 | Editor block kéo-thả (TipTap) | `05-mockup-editor` | `…/versions` | Should | ⬜ (full app) |
+| FE-00 | Shell: login + nav (BFF cookie) | — | `POST /auth/login` | Must | ✅ Next.js |
+| FE-01 | Danh sách nội dung + tạo bài | `05-mockup-dashboard` | `GET/POST /sites/:id/contents` | Must | ✅ Next.js |
+| FE-02 | Chi tiết + soạn version | `05-mockup-editor` | `GET /contents/:id`, `POST …/versions` | Must | ✅ Next.js |
+| FE-03 | Gửi duyệt + hàng chờ duyệt | `05-mockup-approval` | `POST …/submission`, `GET /approvals`, `POST …/approvals` | Must | ✅ Next.js |
+| FE-04 | Xuất bản / gỡ / lịch | `05-mockup-editor` | `POST/DELETE …/publication` | Must | ✅ Next.js |
+| FE-05 | SEO panel + điểm SEO | `05-mockup-editor` | `GET/PUT …/seo` | Must | ✅ Next.js |
+| FE-06 | Editor block kéo-thả (TipTap) | `05-mockup-editor` | `…/versions` | Should | ⬜ |
 | FE-07 | Dashboard analytics (biểu đồ) | `05-mockup-dashboard` | `GET …/analytics` (US-18) | Should | ⬜ |
 | FE-08 | Quản lý người dùng & vai trò | — | US-07 endpoints | Should | ⬜ |
 | FE-09 | Gói & thanh toán | — | US-19 endpoints | Could | ⬜ (US-19 hoãn) |
 
-**Hai đường triển khai:**
-- **MVP UI (đang có):** 1 trang SPA tĩnh (`web/public/index.html`) wired API, phục vụ ở `http://localhost:3000` (nginx trong compose). Phủ FE-00…FE-05 để dùng thật trong browser. **Không cần build tooling.**
-- **Full app (sau):** Next.js (App Router) theo ADR-009 — áp design system, editor TipTap, SSR/SEO; thay dần MVP UI.
+**Triển khai:**
+- **✅ Full app (đang chạy):** **Next.js 14 (App Router)** ở `apps/web/` — ADR-009. **BFF bảo mật:** JWT trong **httpOnly cookie**, proxy `/api/proxy/*` đính Bearer server-side (token không lộ ra JS → chống XSS đánh cắp token). Middleware bảo vệ route. Phủ FE-00…FE-05. Deploy qua compose (service `web`, image `vietcms/web`). Verify: login set httpOnly cookie, proxy hoạt động, không cookie → 401.
+- *(bản MVP tĩnh cũ `web/public/index.html` giữ làm tham chiếu, không còn phục vụ.)*
+- **Còn lại:** editor kéo-thả TipTap (FE-06), dashboard biểu đồ (FE-07), quản lý user (FE-08).
 
 ## Non-functional (áp cho mọi feature — từ SRS §III.2)
 - **Hiệu năng:** trang xuất bản Lighthouse ≥ 90 mobile; lưu/đăng < 2s p95.
