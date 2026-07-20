@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VietCMS — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --p600:#2563EB;--p700:#1D4ED8;--p50:#EFF5FF;--p100:#DBE8FE;
+    --n0:#fff;--n50:#F8FAFC;--n100:#F1F5F9;--n200:#E2E8F0;--n300:#CBD5E1;--n500:#64748B;--n600:#475569;--n700:#334155;--n900:#0F172A;
+    --ok:#059669;--okbg:#D1FAE5;--okfg:#065F46;--warn:#D97706;--warnbg:#FEF3C7;--warnfg:#92400E;--err:#DC2626;--errbg:#FEE2E2;--errfg:#991B1B;--info-bg:#DBEAFE;--info-fg:#1E40AF;
+    --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--sh:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);--sh-md:0 8px 24px rgba(15,23,42,.12);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font);background:var(--n50);color:var(--n900);-webkit-font-smoothing:antialiased;font-size:14px;}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;transition:.15s;}
+  .btn-p{background:var(--p600);color:#fff;} .btn-p:hover{background:var(--p700);}
+  .btn-g{background:#fff;color:var(--n700);border-color:var(--n200);} .btn-g:hover{background:var(--n50);}
+  .btn-d{background:#fff;color:var(--err);border-color:#FCA5A5;} .btn-d:hover{background:var(--errbg);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;}
+  .b-draft{background:var(--info-bg);color:var(--info-fg);} .b-review{background:var(--warnbg);color:var(--warnfg);}
+  .b-approved{background:var(--p100);color:var(--p700);} .b-published{background:var(--okbg);color:var(--okfg);}
+  .b-scheduled{background:#EDE9FE;color:#6D28D9;} .b-archived{background:var(--n100);color:var(--n600);}
+  input.f,select.f,textarea.f{width:100%;border:1px solid var(--n300);border-radius:8px;padding:9px 11px;font-size:14px;}
+  input.f:focus,textarea.f:focus,select.f:focus{outline:none;border-color:var(--p600);box-shadow:0 0 0 3px rgba(37,99,235,.3);}
+
+  /* login */
+  #login{min-height:100vh;display:grid;place-items:center;padding:20px;}
+  .card{background:#fff;border:1px solid var(--n200);border-radius:16px;box-shadow:var(--sh-md);}
+  #login .card{width:100%;max-width:400px;padding:32px;}
+  .logo{width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px;}
+  .lbl{display:block;font-size:12.5px;font-weight:600;color:var(--n700);margin:14px 0 6px;}
+  .hint{font-size:12px;color:var(--n500);margin-top:14px;line-height:1.7;}
+
+  /* app */
+  #app{display:none;}
+  header.top{background:#fff;border-bottom:1px solid var(--n200);padding:12px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;}
+  .brand .logo{width:32px;height:32px;font-size:16px;}
+  .who{margin-left:auto;font-size:13px;color:var(--n600);}
+  .who b{color:var(--n900);}
+  .wrap{max-width:1080px;margin:0 auto;padding:22px 24px 60px;}
+  .tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--n200);}
+  .tab{padding:10px 14px;font-size:14px;font-weight:600;color:var(--n500);border-bottom:2px solid transparent;background:none;border-top:none;border-left:none;border-right:none;}
+  .tab.on{color:var(--p700);border-bottom-color:var(--p600);}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--n200);border-radius:12px;overflow:hidden;font-size:13.5px;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--n500);padding:11px 14px;background:var(--n50);border-bottom:1px solid var(--n200);}
+  td{padding:11px 14px;border-bottom:1px solid var(--n100);}
+  tr:last-child td{border-bottom:none;} tbody tr:hover{background:var(--n50);}
+  .muted{color:var(--n500);font-size:12px;}
+  .seo{font-size:11.5px;border:1px solid var(--n200);border-radius:6px;padding:1px 7px;color:var(--n600);}
+
+  /* drawer */
+  #overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:20;}
+  #drawer{position:fixed;top:0;right:0;height:100%;width:440px;max-width:100%;background:#fff;box-shadow:var(--sh-md);z-index:21;transform:translateX(100%);transition:transform .25s;overflow:auto;}
+  #drawer.open{transform:none;} #overlay.open{display:block;}
+  .dhead{padding:18px 20px;border-bottom:1px solid var(--n200);position:sticky;top:0;background:#fff;}
+  .dbody{padding:18px 20px;}
+  .section-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--n500);margin:18px 0 8px;}
+  .kv{font-size:13px;color:var(--n600);margin:3px 0;} .kv b{color:var(--n900);}
+
+  #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:11px 18px;border-radius:10px;font-size:13.5px;font-weight:500;box-shadow:var(--sh-md);z-index:40;display:none;}
+  #toast.ok{background:var(--n900);color:#fff;} #toast.err{background:var(--err);color:#fff;}
+  a.link{color:var(--p700);font-weight:600;text-decoration:none;font-size:13px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="card">
+    <div class="row"><span class="logo">V</span><div><div style="font-weight:700;font-size:18px">VietCMS</div><div class="muted">Đăng nhập quản trị</div></div></div>
+    <label class="lbl" for="email">Email</label>
+    <input id="email" class="f" type="email" value="ngoc@a.vn" autocomplete="username">
+    <label class="lbl" for="pw">Mật khẩu</label>
+    <input id="pw" class="f" type="password" value="Password123!" autocomplete="current-password">
+    <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:18px" onclick="doLogin()">Đăng nhập</button>
+    <div class="hint">Tài khoản demo (mật khẩu <b>Password123!</b>):<br>
+      • <b>ngoc@a.vn</b> — biên tập (tạo/xuất bản)<br>
+      • <b>hai@a.vn</b> — trưởng phòng (duyệt)<br>
+      • <b>cont@a.vn</b> — cộng tác viên<br>
+      • <b>ed@b.vn</b> — biên tập tenant B</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="top">
+    <div class="brand"><span class="logo">V</span> VietCMS</div>
+    <span class="who">Site: <b id="siteLabel"></b> · <b id="meLabel"></b></span>
+    <button class="btn btn-g" onclick="logout()">Đăng xuất</button>
+  </header>
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab on" id="tab-content" onclick="switchTab('content')">Nội dung</button>
+      <button class="tab" id="tab-queue" onclick="switchTab('queue')">Chờ duyệt <span id="qCount"></span></button>
+      <a class="link" id="sitemapLink" style="margin-left:auto;align-self:center" target="_blank">Mở sitemap.xml ↗</a>
+    </div>
+
+    <!-- content tab -->
+    <div id="view-content">
+      <div class="card" style="padding:14px;margin-bottom:16px">
+        <div class="row">
+          <select id="newKind" class="f" style="width:120px"><option value="post">Bài viết</option><option value="page">Trang</option></select>
+          <input id="newTitle" class="f" style="flex:1;min-width:180px" placeholder="Tiêu đề nội dung mới…">
+          <button class="btn btn-p" onclick="createContent()">＋ Tạo</button>
+        </div>
+      </div>
+      <table><thead><tr><th>Tiêu đề</th><th>Trạng thái</th><th>SEO</th><th>Cập nhật</th><th></th></tr></thead>
+        <tbody id="contentRows"><tr><td colspan="5" class="muted">Đang tải…</td></tr></tbody></table>
+    </div>
+
+    <!-- queue tab -->
+    <div id="view-queue" style="display:none">
+      <table><thead><tr><th>Tiêu đề</th><th>SEO</th><th>Cập nhật</th><th></th></tr></thead>
+        <tbody id="queueRows"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- drawer -->
+<div id="overlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <div class="dhead row">
+    <div><div id="dTitle" style="font-weight:700;font-size:16px"></div><div id="dMeta" class="muted"></div></div>
+    <button class="btn btn-g" style="margin-left:auto" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="dbody" id="dBody"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = 'http://localhost:3001/v1';
+const SITE_A = 'aaaaaaaa-0000-0000-0000-000000000001';
+let token = null, me = null, siteId = SITE_A, current = null;
+
+function decode(t){ try { return JSON.parse(atob(t.split('.')[1])); } catch { return {}; } }
+function toast(msg, type='ok'){ const el=document.getElementById('toast'); el.textContent=msg; el.className=type; el.style.display='block'; setTimeout(()=>el.style.display='none', 2600); }
+function badge(s){ return `<span class="badge b-${s}">${({draft:'Bản nháp',review:'Chờ duyệt',approved:'Đã duyệt',scheduled:'Đã lên lịch',published:'Đã xuất bản',archived:'Lưu trữ'})[s]||s}</span>`; }
+function esc(s){ return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+async function api(method, path, body){
+  const res = await fetch(API+path, { method, headers:{'Content-Type':'application/json', ...(token?{Authorization:'Bearer '+token}:{})}, ...(body!==undefined?{body:JSON.stringify(body)}:{}) });
+  if(res.status===204) return null;
+  const txt = await res.text(); let data; try{ data = txt?JSON.parse(txt):null; }catch{ data = txt; }
+  if(!res.ok){ throw new Error((data&&data.detail)||(data&&data.title)||('Lỗi '+res.status)); }
+  return data;
+}
+
+async function doLogin(){
+  try{
+    const email=document.getElementById('email').value, pw=document.getElementById('pw').value;
+    const r = await api('POST','/auth/login',{email,password:pw});
+    token = r.access_token; me = decode(token);
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('meLabel').textContent = email+' ('+me.role+')';
+    document.getElementById('siteLabel').textContent = 'Site A';
+    document.getElementById('sitemapLink').href = API+'/sites/'+siteId+'/sitemap.xml';
+    switchTab('content'); loadContents(); loadQueue();
+  }catch(e){ toast(e.message,'err'); }
+}
+function logout(){ token=null; me=null; document.getElementById('app').style.display='none'; document.getElementById('login').style.display='grid'; }
+
+function switchTab(t){
+  document.getElementById('view-content').style.display = t==='content'?'block':'none';
+  document.getElementById('view-queue').style.display = t==='queue'?'block':'none';
+  document.getElementById('tab-content').classList.toggle('on',t==='content');
+  document.getElementById('tab-queue').classList.toggle('on',t==='queue');
+  if(t==='queue') loadQueue();
+}
+
+async function loadContents(){
+  try{
+    const r = await api('GET','/sites/'+siteId+'/contents?limit=50');
+    const tb = document.getElementById('contentRows');
+    if(!r.data.length){ tb.innerHTML='<tr><td colspan="5" class="muted">Chưa có nội dung. Tạo bài mới ở trên.</td></tr>'; return; }
+    tb.innerHTML = r.data.map(c=>`<tr>
+      <td><b>${esc(c.title)}</b><div class="muted">/${esc(c.slug)}</div></td>
+      <td>${badge(c.status)}</td>
+      <td><span class="seo">${c.seo_score??'—'}</span></td>
+      <td class="muted">${new Date(c.updated_at).toLocaleString('vi-VN')}</td>
+      <td><button class="btn btn-g" onclick="openDetail('${c.id}')">Xem</button></td></tr>`).join('');
+  }catch(e){ toast(e.message,'err'); }
+}
+
+async function createContent(){
+  const title=document.getElementById('newTitle').value.trim();
+  if(!title){ toast('Nhập tiêu đề','err'); return; }
+  try{
+    await api('POST','/sites/'+siteId+'/contents',{kind:document.getElementById('newKind').value,title});
+    document.getElementById('newTitle').value=''; toast('Đã tạo bản nháp'); loadContents();
+  }catch(e){ toast(e.message,'err'); }
+}
+
+async function loadQueue(){
+  if(!token) return;
+  try{
+    const r = await api('GET','/approvals');
+    document.getElementById('qCount').textContent = r.data.length? '('+r.data.length+')':'';
+    const tb=document.getElementById('queueRows');
+    tb.innerHTML = r.data.length ? r.data.map(c=>`<tr>
+      <td><b>${esc(c.title)}</b></td><td><span class="seo">${c.seo_score??'—'}</span></td>
+      <td class="muted">${new Date(c.updated_at).toLocaleString('vi-VN')}</td>
+      <td class="row">
+        <button class="btn btn-p" onclick="decide('${c.id}','approved')">Duyệt</button>
+        <button class="btn btn-d" onclick="decide('${c.id}','rejected')">Trả lại</button>
+      </td></tr>`).join('') : '<tr><td colspan="4" class="muted">Không có bài chờ duyệt 🎉</td></tr>';
+  }catch(e){ /* editor có thể vẫn xem được list rỗng */ }
+}
+
+async function decide(id, result){
+  let note;
+  if(result==='rejected'){ note = prompt('Ghi chú khi trả lại:'); if(note===null) return; if(!note.trim()){ toast('Cần ghi chú','err'); return; } }
+  try{ await api('POST','/contents/'+id+'/approvals',{result,note}); toast(result==='approved'?'Đã duyệt':'Đã trả lại'); loadQueue(); loadContents(); }
+  catch(e){ toast(e.message,'err'); }
+}
+
+async function openDetail(id){
+  try{
+    const c = await api('GET','/contents/'+id); current=c;
+    let seo={}; try{ seo = await api('GET','/contents/'+id+'/seo'); }catch{}
+    document.getElementById('dTitle').textContent = c.title;
+    document.getElementById('dMeta').innerHTML = badge(c.status)+' · /'+esc(c.slug)+' · '+c.kind;
+    const blocks = c.current_version?.blocks || [];
+    const canApprove = ['manager','admin'].includes(me.role) && c.status==='review';
+    const canPublish = ['admin','editor'].includes(me.role);
+    document.getElementById('dBody').innerHTML = `
+      <div class="section-t">Phiên bản hiện tại</div>
+      <div class="kv">${blocks.length} block ${blocks.length?': '+blocks.map(b=>b.type).join(', '):''}</div>
+      <button class="btn btn-g" onclick="saveVersion('${id}')">＋ Lưu version mẫu (heading+paragraph)</button>
+
+      <div class="section-t">SEO</div>
+      <label class="lbl">Tiêu đề SEO</label><input id="seoT" class="f" value="${esc(seo.title||'')}">
+      <label class="lbl">Meta description</label><textarea id="seoD" class="f" rows="2">${esc(seo.description||'')}</textarea>
+      <label class="lbl">Từ khoá</label><input id="seoK" class="f" value="${esc(seo.keywords||'')}">
+      <div class="row" style="margin-top:10px"><button class="btn btn-p" onclick="saveSeo('${id}')">Lưu SEO</button>
+        <span class="muted">Điểm: <b id="seoScore">${seo.score??'—'}</b>/100</span></div>
+
+      <div class="section-t">Hành động</div>
+      <div class="row">
+        ${c.status==='draft'?`<button class="btn btn-p" onclick="submitReview('${id}')">Gửi duyệt →</button>`:''}
+        ${canApprove?`<button class="btn btn-p" onclick="decide('${id}','approved');closeDrawer()">✓ Duyệt</button><button class="btn btn-d" onclick="decide('${id}','rejected');closeDrawer()">Trả lại</button>`:''}
+        ${canPublish&&['approved','published'].includes(c.status)?`<button class="btn btn-p" onclick="publish('${id}')">🚀 Xuất bản</button>`:''}
+        ${canPublish&&['published','scheduled'].includes(c.status)?`<button class="btn btn-d" onclick="unpublish('${id}')">Gỡ xuất bản</button>`:''}
+      </div>
+      ${c.public_url?`<div class="kv" style="margin-top:10px">URL: <a class="link" href="${esc(c.public_url)}" target="_blank">${esc(c.public_url)}</a></div>`:''}`;
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('drawer').classList.add('open');
+  }catch(e){ toast(e.message,'err'); }
+}
+function closeDrawer(){ document.getElementById('overlay').classList.remove('open'); document.getElementById('drawer').classList.remove('open'); }
+
+async function saveVersion(id){ try{ await api('POST','/contents/'+id+'/versions',{blocks:[{type:'heading'},{type:'paragraph'}]}); toast('Đã lưu version'); openDetail(id); }catch(e){ toast(e.message,'err'); } }
+async function saveSeo(id){
+  try{ const r = await api('PUT','/contents/'+id+'/seo',{title:document.getElementById('seoT').value,description:document.getElementById('seoD').value,keywords:document.getElementById('seoK').value,schema_json:{'@type':'Article'}});
+    document.getElementById('seoScore').textContent = r.score; toast('Đã lưu SEO (điểm '+r.score+')'); loadContents(); }catch(e){ toast(e.message,'err'); }
+}
+async function submitReview(id){ try{ await api('POST','/contents/'+id+'/submission'); toast('Đã gửi duyệt'); closeDrawer(); loadContents(); loadQueue(); }catch(e){ toast(e.message,'err'); } }
+async function publish(id){ try{ const r=await api('POST','/contents/'+id+'/publication',{}); toast('Đã '+(r.status==='scheduled'?'lên lịch':'xuất bản')); closeDrawer(); loadContents(); }catch(e){ toast(e.message,'err'); } }
+async function unpublish(id){ try{ await api('DELETE','/contents/'+id+'/publication'); toast('Đã gỡ xuất bản'); closeDrawer(); loadContents(); }catch(e){ toast(e.message,'err'); } }
+
+document.getElementById('pw').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>

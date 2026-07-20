@@ -13,6 +13,7 @@ services:
       - ./db/0001_init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
       - ./db/0002_auth.sql:/docker-entrypoint-initdb.d/02_auth.sql:ro
       - ./db/0003_publishing.sql:/docker-entrypoint-initdb.d/03_publishing.sql:ro
+      - ./db/0004_seo.sql:/docker-entrypoint-initdb.d/04_seo.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d vietcms"]
       interval: 3s
@@ -59,6 +60,18 @@ services:
           memory: 128M
     restart: unless-stopped
     # Liveness/readiness đã khai trong Dockerfile HEALTHCHECK (/v1/health)
+
+  # UI tối giản (SPA tĩnh) wired API — phục vụ ở :3000 (khớp CORS_ORIGIN)
+  web:
+    image: nginx:alpine
+    container_name: vietcms-web
+    ports:
+      - "3000:80"
+    volumes:
+      - ./web/public:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+    restart: unless-stopped
 
 volumes:
   pgdata:

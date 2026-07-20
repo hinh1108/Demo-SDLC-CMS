@@ -34,6 +34,15 @@ export class DbService implements OnModuleDestroy {
     }
   }
 
+  /**
+   * Query KHÔNG có tenant scope — CHỈ dùng cho hàm SECURITY DEFINER / dữ liệu công khai
+   * (vd public_sitemap). Không dùng cho dữ liệu nhạy cảm.
+   */
+  async queryUnscoped<T = any>(text: string, params?: any[]): Promise<T[]> {
+    const { rows } = await this.pool.query(text, params);
+    return rows as T[];
+  }
+
   /** Readiness probe — kiểm tra kết nối DB. */
   async ping(): Promise<boolean> {
     try {

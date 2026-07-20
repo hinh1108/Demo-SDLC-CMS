@@ -61,6 +61,10 @@ export class PublishingService {
         return { scheduled: true, status: 'scheduled', scheduled_at: when.toISOString(), public_url, used_temp_subdomain };
       }
 
+      // Áp SEO metadata khi publish (US-09) — render sẽ nhúng vào <meta>/schema (stub log)
+      const seo = await c.query('SELECT title, description FROM seo_meta WHERE content_id = $1', [contentId]);
+      const metaTitle = seo.rows[0]?.title ?? null;
+
       // Xuất bản ngay — snapshot version approved, ghi published_at + url.
       // (Render SSR/static + đẩy CDN + cập nhật sitemap = external/job — ADR-004; ở đây log bước đó)
       await c.query(
@@ -68,7 +72,7 @@ export class PublishingService {
            published_at = now(), public_url = $1 WHERE id = $2`,
         [public_url, contentId],
       );
-      this.logger.log(`publish content=${contentId} url=${public_url} by=${userId} → render+CDN+sitemap`);
+      this.logger.log(`publish content=${contentId} url=${public_url} seo_title=${metaTitle ? '"' + metaTitle + '"' : 'none'} by=${userId} → render(áp meta)+CDN+sitemap`);
       return { scheduled: false, status: 'published', public_url, used_temp_subdomain };
     });
   }

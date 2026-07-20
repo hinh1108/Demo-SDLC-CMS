@@ -35,7 +35,7 @@ Bảng tổng (23 feature):
 | US-06 | Duyệt/từ chối + bản ghi | 2 | Must | M | US-05, RBAC | ✅ |
 | US-07 | Quản lý người dùng & vai trò | 2 | Must | M | Auth | ⬜ |
 | US-08 | Đa site / workspace | 2 | Could | M | US-07 | ⬜ |
-| US-09 | Metadata SEO + sitemap | 3 | Must | M | US-01, publish | ⬜ |
+| US-09 | Metadata SEO + sitemap | 3 | Must | M | US-01, publish | ✅ |
 | US-10 | AI viết nội dung tiếng Việt | 3 | Should | M | US-01, AI, quota | ⬜ |
 | US-11 | AI gợi ý SEO | 3 | Should | M | US-09, AI | ⬜ |
 | US-12 | AEO (AI-search) | 3 | Could | M | US-09 | ⬜ |
@@ -45,7 +45,7 @@ Bảng tổng (23 feature):
 | US-16 | Form & Lead (public) | 5 | Should | M | US-01, captcha | ⬜ |
 | US-17 | Tích hợp kênh (Zalo/FB/GA4/CRM) | 5 | Could | L | US-16 | ⬜ |
 | US-18 | Dashboard phân tích | 5 | Should | M | analytics events | ⬜ |
-| US-19 | Gói & thanh toán VN | 6 | Must | L | Auth, VNPay | ⬜ |
+| US-19 | Gói & thanh toán VN | 6 | Must | L | Auth, VNPay | ⏭️ Bỏ qua (tạm hoãn) |
 | US-20 | Gói Free + giá minh bạch | 6 | Should | S | US-19 | ⬜ |
 | US-21 | Đa ngôn ngữ (VN/EN + hreflang) | 7 | Could | M | US-01, US-14 | ⬜ |
 | US-22 | Headless API (REST/GraphQL) | 7 | Won't | L | — | ⬜ |
@@ -205,6 +205,27 @@ Bảng tổng (23 feature):
 
 ---
 
+## Epic 8 — Admin Web App (Frontend)
+
+> Trước đây UI chỉ được plan ở mức *thiết kế* (mockup Phase 5) + *quyết định kiến trúc* (Next.js, ADR-004/009) + *task FE rải trong từng feature*. Epic này **theo dõi việc build frontend như một hạng mục thật**, map màn ↔ mockup ↔ endpoint đã có.
+
+| ID | Màn | Map mockup | Endpoint dùng | MoSCoW | Status |
+|---|---|---|---|---|---|
+| FE-00 | Shell: login + nav + chọn site | — | `POST /auth/login` | Must | 🟡 MVP UI |
+| FE-01 | Danh sách nội dung + tạo bài | `05-mockup-dashboard` | `GET/POST /sites/:id/contents` | Must | 🟡 MVP UI |
+| FE-02 | Chi tiết + soạn version | `05-mockup-editor` | `GET /contents/:id`, `POST …/versions` | Must | 🟡 MVP UI |
+| FE-03 | Gửi duyệt + hàng chờ duyệt | `05-mockup-approval` | `POST …/submission`, `GET /approvals`, `POST …/approvals` | Must | 🟡 MVP UI |
+| FE-04 | Xuất bản / gỡ / lịch | `05-mockup-editor` | `POST/DELETE …/publication` | Must | 🟡 MVP UI |
+| FE-05 | SEO panel + điểm SEO | `05-mockup-editor` | `GET/PUT …/seo` | Must | 🟡 MVP UI |
+| FE-06 | Editor block kéo-thả (TipTap) | `05-mockup-editor` | `…/versions` | Should | ⬜ (full app) |
+| FE-07 | Dashboard analytics (biểu đồ) | `05-mockup-dashboard` | `GET …/analytics` (US-18) | Should | ⬜ |
+| FE-08 | Quản lý người dùng & vai trò | — | US-07 endpoints | Should | ⬜ |
+| FE-09 | Gói & thanh toán | — | US-19 endpoints | Could | ⬜ (US-19 hoãn) |
+
+**Hai đường triển khai:**
+- **MVP UI (đang có):** 1 trang SPA tĩnh (`web/public/index.html`) wired API, phục vụ ở `http://localhost:3000` (nginx trong compose). Phủ FE-00…FE-05 để dùng thật trong browser. **Không cần build tooling.**
+- **Full app (sau):** Next.js (App Router) theo ADR-009 — áp design system, editor TipTap, SSR/SEO; thay dần MVP UI.
+
 ## Non-functional (áp cho mọi feature — từ SRS §III.2)
 - **Hiệu năng:** trang xuất bản Lighthouse ≥ 90 mobile; lưu/đăng < 2s p95.
 - **Bảo mật:** cô lập tenant (RLS), ND 13/2023, captcha, kiểm soát phiên; managed/vá tự động.
@@ -217,5 +238,5 @@ Mọi lỗi → **RFC 7807** `application/problem+json` với `type` URI ổn đ
 
 ## Trạng thái & bước tiếp
 - ✅ W0: Auth + tenancy + Content list (chạy & verify 10/10).
-- ⬜ W1 kế tiếp: **US-05 → US-06 → US-01 → US-09 → US-14 → US-19** (thứ tự theo phụ thuộc).
+- ✅ W1 core đã build: **US-05, US-06, US-01 (API), US-09, US-14**. **US-19 (billing) — tạm hoãn theo yêu cầu.**
 - Spec chi tiết Must (EARS + Given/When/Then + error table + TODO): `specs/US-01-editor.spec.md`, `specs/US-06-approval.spec.md`, `specs/US-14-publishing.spec.md` (tạo kèm). Các feature còn lại spec theo cùng template khi tới wave.

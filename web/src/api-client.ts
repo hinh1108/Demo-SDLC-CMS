@@ -87,4 +87,18 @@ export const api = {
     return request<{ site_id: string; urls: Array<{ slug: string; public_url: string; published_at: string }> }>(
       `/sites/${siteId}/sitemap`, {}, token);
   },
+  // US-09 — SEO
+  getSeo(contentId: string, token: string) {
+    return request<{ title: string | null; description: string | null; keywords: string | null; schema_json: unknown; score: number | null }>(
+      `/contents/${contentId}/seo`, {}, token);
+  },
+  putSeo(contentId: string, token: string, body: { title?: string; description?: string; keywords?: string; schema_json?: Record<string, unknown> }) {
+    return request(`/contents/${contentId}/seo`, { method: 'PUT', body: JSON.stringify(body) }, token);
+  },
+  // sitemap.xml công khai (không cần token) — trả text XML
+  async getSitemapXml(siteId: string): Promise<string> {
+    const base = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_API_URL) || 'http://localhost:3001/v1';
+    const res = await fetch(`${base}/sites/${siteId}/sitemap.xml`);
+    return res.text();
+  },
 };

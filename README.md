@@ -24,11 +24,12 @@ docker-compose.yml # Postgres 16 + Redis
 ### A. Deploy cả stack bằng Docker Compose (khuyến nghị) — xem [DEPLOY.md](DEPLOY.md)
 ```bash
 cp .env.example .env            # đặt JWT_SECRET
-docker compose up -d --build    # api + postgres (auto-migrate) + redis
+docker compose up -d --build    # web + api + postgres (auto-migrate) + redis
 docker compose exec -T api node scripts/seed.mjs   # dữ liệu demo
-node scripts/e2e-verify.mjs     # verify: 10 passed
 ```
-API: http://localhost:3001/v1 · health `/v1/health` · readiness `/v1/health/ready`
+- **🖥️ Giao diện admin (browser): http://localhost:3000** — đăng nhập `ngoc@a.vn` / `Password123!`
+- API: http://localhost:3001/v1 · health `/v1/health` · readiness `/v1/health/ready`
+- Verify: `node scripts/e2e-verify.mjs` (và workflow/editor/publishing/seo)
 
 ### B. Chạy API từ source (dev)
 ```bash
@@ -71,11 +72,18 @@ Tài khoản demo (mật khẩu `Password123!`): `ngoc@a.vn` (editor, tenant A),
 | `DELETE /v1/contents/:id/publication` | Gỡ xuất bản → draft (204) |
 | `GET /v1/sites/:siteId/sitemap` | URL đã xuất bản (BR-06: subdomain tạm khi chưa có domain) |
 
-## Kết quả verify (47/47 pass)
+**Slice #5 — SEO meta + sitemap.xml (US-09)**
+| Endpoint | Mô tả |
+|---|---|
+| `GET/PUT /v1/contents/:id/seo` | Metadata SEO + **điểm SEO** tự tính (0–100) |
+| `GET /v1/sites/:siteId/sitemap.xml` | **Public** sitemap XML (SECURITY DEFINER, chỉ published, XML-escape) |
+
+## Kết quả verify (59/59 pass)
 - `scripts/e2e-verify.mjs` (10): login, RLS cô lập, không leak field, 401, validation.
 - `scripts/e2e-workflow.mjs` (12): submit→review, BR-04 no-approver→409, queue, **RBAC editor→403**, approve→approved+record, reject cần ghi chú (422), state machine invalid→409.
 - `scripts/e2e-editor.mjs` (13): create+slugify VN, slug trùng→409, save version (BR-01), **block JSON lạ→422**, versions, cross-tenant→404, tạo trên site tenant khác→404, slug sai format→400.
 - `scripts/e2e-publishing.mjs` (12): **BR-05 draft→409 not-approved**, RBAC contributor/manager→403, editor publish→200+url, BR-06 subdomain tạm, idempotent, sitemap, unpublish→204, lên lịch→202, lịch quá khứ→422, cross-tenant→404.
+- `scripts/e2e-seo.mjs` (12): GET/PUT seo + điểm SEO 100, content.seo_score, validation (title>200→400, schema_json→400), cross-tenant→404, **sitemap.xml public + Content-Type xml + well-formed + chỉ published (không lộ nháp)**.
 
 ## Bảo mật (3 góc nhìn — xem specs/auth-content-list_design.md)
 - **Tenant isolation:** JWT mang `tenant_id` → `SET LOCAL app.current_tenant` → **PostgreSQL RLS**. API kết nối bằng role `app_login` (non-superuser → RLS thực thi). Defense-in-depth.
