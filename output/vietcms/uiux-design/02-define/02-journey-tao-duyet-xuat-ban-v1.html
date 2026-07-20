@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey Map — Tạo → Duyệt → Xuất bản · VietCMS</title>
+<style>
+  :root{
+    --primary-600:#2563EB; --primary-700:#1D4ED8; --primary-50:#EFF5FF; --primary-100:#DBE8FE;
+    --accent-600:#7C3AED; --accent-50:#F5F3FF;
+    --n-0:#fff; --n-50:#F8FAFC; --n-100:#F1F5F9; --n-200:#E2E8F0; --n-300:#CBD5E1;
+    --n-500:#64748B; --n-600:#475569; --n-700:#334155; --n-900:#0F172A;
+    --success:#059669; --success-bg:#D1FAE5; --success-fg:#065F46;
+    --warning:#D97706; --warning-bg:#FEF3C7; --warning-fg:#92400E;
+    --error:#DC2626; --error-bg:#FEE2E2; --error-fg:#991B1B;
+    --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',sans-serif;
+    --radius:12px; --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font);color:var(--n-900);background:var(--n-50);line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1240px;margin:0 auto;padding:32px 24px 64px;}
+  .head{background:linear-gradient(135deg,var(--primary-600),var(--primary-700));color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:var(--shadow);}
+  .head h1{margin:0 0 6px;font-size:28px;letter-spacing:-.02em;}
+  .head p{margin:0;opacity:.92;font-size:15px;max-width:70ch;}
+  .persona-bar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;background:#fff;border:1px solid var(--n-200);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;box-shadow:var(--shadow);}
+  .persona-bar .av{width:44px;height:44px;border-radius:50%;background:var(--primary-600);color:#fff;display:grid;place-items:center;font-weight:700;}
+  .persona-bar b{font-size:15px;} .persona-bar span{color:var(--n-500);font-size:13px;}
+  .goal{margin-left:auto;font-size:13px;color:var(--n-600);max-width:44ch;}
+  .note{background:var(--warning-bg);border:1px solid #FCD34D;color:var(--warning-fg);border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:24px;}
+
+  .board{overflow-x:auto;border:1px solid var(--n-200);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);}
+  .grid{min-width:1080px;display:grid;grid-template-columns:150px repeat(7,1fr);}
+  .rowlabel{padding:14px 12px;font-size:12px;font-weight:700;color:var(--n-600);text-transform:uppercase;letter-spacing:.04em;border-right:1px solid var(--n-200);background:var(--n-50);display:flex;align-items:center;position:sticky;left:0;z-index:2;}
+  .cell{padding:14px 12px;border-right:1px solid var(--n-100);border-top:1px solid var(--n-100);font-size:13px;}
+  .cell:last-child{border-right:none;}
+
+  /* Stage header */
+  .stage{background:var(--primary-50);border-top:none;font-weight:700;color:var(--primary-700);font-size:13.5px;}
+  .stage .idx{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--primary-600);color:#fff;font-size:12px;margin-right:6px;}
+  .phase{grid-column:2 / 9;background:var(--n-900);color:#fff;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;text-align:center;}
+
+  /* Emotion curve */
+  .emo-wrap{position:relative;height:150px;grid-column:2 / 9;border-top:1px solid var(--n-100);}
+  .emo-label{grid-column:1;border-right:1px solid var(--n-200);background:var(--n-50);}
+  svg{display:block;width:100%;height:150px;}
+  .emo-face{font-size:18px;}
+
+  .tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;margin:2px 2px 0 0;}
+  .t-touch{background:var(--n-100);color:var(--n-700);}
+  .t-pain{background:var(--error-bg);color:var(--error-fg);}
+  .t-opp{background:var(--primary-100);color:var(--primary-700);}
+  .t-ai{background:var(--accent-50);color:var(--accent-600);}
+  .think{font-style:italic;color:var(--n-600);}
+  ul.mini{margin:0;padding-left:16px;} ul.mini li{margin-bottom:3px;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;font-size:12px;color:var(--n-600);}
+  .legend b{color:var(--n-900);}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;}
+  .foot{margin-top:24px;font-size:12px;color:var(--n-500);border-top:1px solid var(--n-200);padding-top:14px;}
+  @media(max-width:640px){.head h1{font-size:22px;}.goal{margin-left:0;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Journey Map — Tạo → Duyệt → Xuất bản nội dung</h1>
+    <p>Hành trình end-to-end của biên tập viên khi đưa một bài viết từ ý tưởng lên website. Đường cong cảm xúc phản ánh <b>hiện trạng (as-is)</b> — nơi trũng nhất chính là cơ hội lớn nhất cho VietCMS.</p>
+  </div>
+
+  <div class="persona-bar">
+    <div class="av">N</div>
+    <div><b>Ngọc</b> · 27 · Biên tập viên nội dung<br><span>Không-kỹ-thuật · persona PRIMARY (North-star)</span></div>
+    <div class="goal">🎯 <b>Mục tiêu:</b> tự đưa bài lên website trong vài phút, không chờ dev, không lạc trong quy trình duyệt.</div>
+  </div>
+
+  <div class="note">⚠️ <b>Proto-journey (assumption-based)</b> — dựng từ <code>as-is-process.md</code> + user stories; chưa validate bằng phỏng vấn thật. Nhân vật phụ: <b>Hải</b> (duyệt), <b>Trang</b> (SEO).</div>
+
+  <div class="board">
+    <div class="grid">
+      <!-- Phase band -->
+      <div class="rowlabel" style="border-top:none;">Giai đoạn</div>
+      <div class="phase">Chuẩn bị &amp; sáng tạo · Duyệt &amp; tinh chỉnh · Phát hành &amp; đo lường</div>
+
+      <!-- Stages -->
+      <div class="rowlabel">Bước</div>
+      <div class="cell stage"><span class="idx">1</span>Nhận brief &amp; lên kế hoạch</div>
+      <div class="cell stage"><span class="idx">2</span>Soạn thảo nội dung</div>
+      <div class="cell stage"><span class="idx">3</span>Tối ưu SEO</div>
+      <div class="cell stage"><span class="idx">4</span>Gửi duyệt</div>
+      <div class="cell stage"><span class="idx">5</span>Nhận phản hồi &amp; sửa</div>
+      <div class="cell stage"><span class="idx">6</span>Xuất bản</div>
+      <div class="cell stage"><span class="idx">7</span>Đo lường &amp; lặp</div>
+
+      <!-- Emotion curve -->
+      <div class="rowlabel emo-label">Cảm xúc<br>(as-is)</div>
+      <div class="emo-wrap">
+        <svg viewBox="0 0 1400 150" preserveAspectRatio="none" aria-label="Đường cong cảm xúc">
+          <line x1="0" y1="75" x2="1400" y2="75" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4 4"/>
+          <!-- points at x = 100,300,500,700,900,1100,1300 ; y: lower = happier -->
+          <polyline points="100,50 300,80 500,105 700,130 900,110 1100,120 1300,70"
+            fill="none" stroke="#2563EB" stroke-width="3"/>
+          <g fill="#2563EB">
+            <circle cx="100" cy="50" r="7"/><circle cx="300" cy="80" r="7"/><circle cx="500" cy="105" r="7"/>
+            <circle cx="700" cy="130" r="8" fill="#DC2626"/><circle cx="900" cy="110" r="7"/>
+            <circle cx="1100" cy="120" r="7" fill="#DC2626"/><circle cx="1300" cy="70" r="7"/>
+          </g>
+        </svg>
+      </div>
+      <!-- faces row aligned under stages -->
+      <div class="rowlabel">&nbsp;</div>
+      <div class="cell emo-face">🙂 Hào hứng</div>
+      <div class="cell emo-face">😐 Ổn nhưng vướng</div>
+      <div class="cell emo-face">😟 Rối plugin</div>
+      <div class="cell emo-face">😣 Mất dấu, chờ</div>
+      <div class="cell emo-face">😕 Làm lại</div>
+      <div class="cell emo-face">😣 Kẹt dev/DNS</div>
+      <div class="cell emo-face">😐 Data rời rạc</div>
+
+      <!-- Actions -->
+      <div class="rowlabel">Hành động</div>
+      <div class="cell"><ul class="mini"><li>Nhận brief từ trưởng phòng</li><li>Lên dàn ý bài</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Viết trong Google Docs</li><li>Copy sang CMS → vỡ format</li><li>Chèn ảnh từ Canva</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Nhờ Trang rà SEO</li><li>Chỉnh title/meta</li><li>Kiểm tra plugin</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Gửi bài qua Zalo/email</li><li>Nhắn "duyệt giúp em"</li><li>Chờ phản hồi</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Đọc ghi chú tản mát</li><li>Sửa lại bản thảo</li><li>Không chắc bản mới nhất</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Bấm publish</li><li>Nếu đổi layout → nhờ dev</li><li>Chờ trỏ domain/SSL</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Mở GA4, Search Console</li><li>Tổng hợp thủ công</li></ul></div>
+
+      <!-- Thoughts -->
+      <div class="rowlabel">Suy nghĩ</div>
+      <div class="cell think">"Bài này phải lên sớm cho kịp campaign."</div>
+      <div class="cell think">"Sao dán vào lại lệch hết vậy trời…"</div>
+      <div class="cell think">"Cài đủ plugin chưa? Có xung đột không?"</div>
+      <div class="cell think">"Sếp đọc chưa nhỉ? Mình gửi bản nào rồi?"</div>
+      <div class="cell think">"Ghi chú ở đâu, bản nào là mới nhất?"</div>
+      <div class="cell think">"Chỉ đổi cái banner mà phải chờ dev cả tuần."</div>
+      <div class="cell think">"Bài này chạy tốt không? Số ở mấy chỗ khác nhau."</div>
+
+      <!-- Touchpoints -->
+      <div class="rowlabel">Điểm chạm</div>
+      <div class="cell"><span class="tag t-touch">Docs/Email</span></div>
+      <div class="cell"><span class="tag t-touch">Google Docs</span><span class="tag t-touch">Canva</span><span class="tag t-touch">CMS</span></div>
+      <div class="cell"><span class="tag t-touch">Plugin SEO</span><span class="tag t-touch">Keyword tool</span></div>
+      <div class="cell"><span class="tag t-touch">Zalo</span><span class="tag t-touch">Email</span></div>
+      <div class="cell"><span class="tag t-touch">Chat</span><span class="tag t-touch">CMS</span></div>
+      <div class="cell"><span class="tag t-touch">CMS</span><span class="tag t-touch">Dev/Agency</span><span class="tag t-touch">DNS</span></div>
+      <div class="cell"><span class="tag t-touch">GA4</span><span class="tag t-touch">Search Console</span></div>
+
+      <!-- Pains -->
+      <div class="rowlabel">Điểm đau</div>
+      <div class="cell"><span class="tag t-pain">P6 phân mảnh</span></div>
+      <div class="cell"><span class="tag t-pain">P4 viết chậm</span><span class="tag t-pain">P6</span></div>
+      <div class="cell"><span class="tag t-pain">P3 lắp plugin</span></div>
+      <div class="cell"><span class="tag t-pain">P8 duyệt rời rạc</span></div>
+      <div class="cell"><span class="tag t-pain">P8 mất phiên bản</span></div>
+      <div class="cell"><span class="tag t-pain">P1 phụ thuộc dev</span></div>
+      <div class="cell"><span class="tag t-pain">P6 data rời rạc</span></div>
+
+      <!-- Opportunities -->
+      <div class="rowlabel">Cơ hội<br>(VietCMS)</div>
+      <div class="cell"><ul class="mini"><li>Template ngành để khởi tạo nhanh <span class="tag t-opp">US-03</span></li></ul></div>
+      <div class="cell"><ul class="mini"><li>No-code editor tự lưu <span class="tag t-opp">US-01</span></li><li>AI viết tiếng Việt <span class="tag t-ai">US-10</span></li><li>Media library <span class="tag t-opp">US-02</span></li></ul></div>
+      <div class="cell"><ul class="mini"><li>SEO mặc định, không plugin <span class="tag t-opp">US-09</span></li><li>AI SEO một chạm <span class="tag t-ai">US-11</span></li></ul></div>
+      <div class="cell"><ul class="mini"><li>Gửi duyệt trong hệ thống + thông báo <span class="tag t-opp">US-05</span></li></ul></div>
+      <div class="cell"><ul class="mini"><li>Ghi chú duyệt gắn bài + versioning <span class="tag t-opp">US-06</span></li></ul></div>
+      <div class="cell"><ul class="mini"><li>Xuất bản 1 chạm + lịch <span class="tag t-opp">US-14/15</span></li><li>Không cần dev cho layout</li></ul></div>
+      <div class="cell"><ul class="mini"><li>Dashboard tích hợp <span class="tag t-opp">US-18</span></li></ul></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot" style="background:#DC2626"></span><b>Đáy cảm xúc</b> — Bước 4 (Gửi duyệt) &amp; Bước 6 (Xuất bản): nơi VietCMS tạo khác biệt lớn nhất.</span>
+    <span><span class="tag t-opp" style="margin:0">US-xx</span> User story truy vết</span>
+    <span><span class="tag t-ai" style="margin:0">AI</span> Tính năng AI (accent violet)</span>
+  </div>
+
+  <div class="foot">
+    VietCMS · Phase 2 Define · Journey v1.0 · 2026-07-20 · Persona: <a href="02-persona-bien-tap-vien-v1.md">Ngọc — Biên tập viên</a> ·
+    Pain P1–P8 theo <code>docs/ba-docs/ba-phase2-elicitation/as-is-process.md</code> ·
+    <a href="02-problem-statement-v1.md">Problem statement</a>
+  </div>
+</div>
+</body>
+</html>

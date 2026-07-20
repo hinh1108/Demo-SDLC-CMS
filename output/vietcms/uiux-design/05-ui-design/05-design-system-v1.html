@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System — VietCMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     VIETCMS DESIGN TOKENS — Modern Trust (Blue) · v1.0
+     ============================================================ */
+  :root {
+    /* Primary — Blue (brand / trust) */
+    --color-primary-50:#EFF5FF; --color-primary-100:#DBE8FE; --color-primary-200:#BFD6FE;
+    --color-primary-300:#93BBFD; --color-primary-400:#609AFA; --color-primary-500:#3B82F6;
+    --color-primary-600:#2563EB; --color-primary-700:#1D4ED8; --color-primary-800:#1E40AF;
+    --color-primary-900:#1E3A8A; --color-primary-950:#172554;
+
+    /* Neutral — Cool gray */
+    --color-neutral-0:#FFFFFF; --color-neutral-50:#F8FAFC; --color-neutral-100:#F1F5F9;
+    --color-neutral-200:#E2E8F0; --color-neutral-300:#CBD5E1; --color-neutral-400:#94A3B8;
+    --color-neutral-500:#64748B; --color-neutral-600:#475569; --color-neutral-700:#334155;
+    --color-neutral-800:#1E293B; --color-neutral-900:#0F172A; --color-neutral-950:#020617;
+
+    /* Accent — Violet (AI features only) */
+    --color-accent-50:#F5F3FF; --color-accent-100:#EDE9FE; --color-accent-300:#C4B5FD;
+    --color-accent-500:#8B5CF6; --color-accent-600:#7C3AED; --color-accent-700:#6D28D9;
+
+    /* Semantic */
+    --color-success:#059669; --color-success-fg:#065F46; --color-success-bg:#D1FAE5; --color-success-border:#6EE7B7;
+    --color-warning:#D97706; --color-warning-fg:#92400E; --color-warning-bg:#FEF3C7; --color-warning-border:#FCD34D;
+    --color-error:#DC2626;   --color-error-fg:#991B1B;   --color-error-bg:#FEE2E2;   --color-error-border:#FCA5A5;
+    --color-info:#2563EB;    --color-info-fg:#1E40AF;    --color-info-bg:#DBEAFE;    --color-info-border:#93C5FD;
+
+    /* Semantic surface aliases (theme-aware) */
+    --surface-page:var(--color-neutral-50);
+    --surface-card:var(--color-neutral-0);
+    --surface-sunken:var(--color-neutral-100);
+    --border-default:var(--color-neutral-200);
+    --border-strong:var(--color-neutral-300);
+    --text-primary:var(--color-neutral-900);
+    --text-secondary:var(--color-neutral-600);
+    --text-muted:var(--color-neutral-500);
+    --text-on-brand:#FFFFFF;
+
+    /* Typography */
+    --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',Roboto,sans-serif;
+    --font-mono:'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
+    --text-display:48px; --text-h1:32px; --text-h2:24px; --text-h3:20px; --text-h4:16px;
+    --text-body-lg:18px; --text-body:16px; --text-body-sm:14px; --text-caption:12px;
+    --lh-tight:1.15; --lh-snug:1.3; --lh-normal:1.5; --lh-relaxed:1.6;
+    --fw-regular:400; --fw-medium:500; --fw-semibold:600; --fw-bold:700;
+
+    /* Spacing (8px grid) */
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
+    --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px; --space-16:64px; --space-20:80px;
+
+    /* Radius */
+    --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-2xl:24px; --radius-full:9999px;
+
+    /* Shadow */
+    --shadow-xs:0 1px 2px rgba(15,23,42,0.06);
+    --shadow-sm:0 1px 3px rgba(15,23,42,0.08),0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md:0 4px 8px -2px rgba(15,23,42,0.10),0 2px 4px -2px rgba(15,23,42,0.06);
+    --shadow-lg:0 12px 20px -4px rgba(15,23,42,0.10),0 4px 8px -4px rgba(15,23,42,0.06);
+    --shadow-xl:0 24px 32px -8px rgba(15,23,42,0.14),0 8px 12px -6px rgba(15,23,42,0.08);
+    --focus-ring:0 0 0 3px rgba(37,99,235,0.35);
+
+    /* Motion */
+    --dur-fast:150ms; --dur-normal:250ms; --dur-slow:400ms;
+    --ease-out:cubic-bezier(0,0,0.2,1); --ease-in-out:cubic-bezier(0.4,0,0.2,1);
+    --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  /* Dark theme */
+  :root[data-theme="dark"] {
+    --surface-page:var(--color-neutral-950);
+    --surface-card:var(--color-neutral-900);
+    --surface-sunken:var(--color-neutral-800);
+    --border-default:var(--color-neutral-800);
+    --border-strong:var(--color-neutral-700);
+    --text-primary:var(--color-neutral-100);
+    --text-secondary:var(--color-neutral-300);
+    --text-muted:var(--color-neutral-400);
+    --color-success-bg:#052E22; --color-success-fg:#6EE7B7;
+    --color-warning-bg:#3A2A08; --color-warning-fg:#FCD34D;
+    --color-error-bg:#3A1414;   --color-error-fg:#FCA5A5;
+    --color-info-bg:#0F2447;    --color-info-fg:#93C5FD;
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.4);
+    --shadow-md:0 4px 8px -2px rgba(0,0,0,0.5);
+    --shadow-lg:0 12px 20px -4px rgba(0,0,0,0.55);
+  }
+
+  /* ============================================================ BASE */
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; font-family:var(--font-sans); font-size:var(--text-body);
+    line-height:var(--lh-normal); color:var(--text-primary);
+    background:var(--surface-page);
+    transition:background var(--dur-normal) var(--ease-out), color var(--dur-normal) var(--ease-out);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{margin:0 0 var(--space-3); font-weight:var(--fw-bold); letter-spacing:-0.01em;}
+  a{color:var(--color-primary-700); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  code{background:var(--surface-sunken); padding:2px 6px; border-radius:var(--radius-sm);
+    font-family:var(--font-mono); font-size:0.85em; color:var(--color-primary-700);}
+  :root[data-theme="dark"] code{color:var(--color-primary-300);}
+
+  /* Layout */
+  .shell{max-width:1180px; margin:0 auto; padding:var(--space-8) var(--space-6) var(--space-20);}
+  .section{margin-bottom:var(--space-16); scroll-margin-top:80px;}
+  .section-title{font-size:var(--text-h2); padding-bottom:var(--space-3);
+    border-bottom:2px solid var(--border-default); display:flex; align-items:center; gap:var(--space-3);}
+  .section-title .num{font-size:var(--text-body-sm); font-family:var(--font-mono);
+    color:var(--color-primary-600); background:var(--color-primary-50);
+    padding:2px 8px; border-radius:var(--radius-full);}
+  :root[data-theme="dark"] .section-title .num{background:var(--color-primary-950); color:var(--color-primary-300);}
+  .lede{color:var(--text-muted); margin:var(--space-2) 0 var(--space-6); max-width:70ch;}
+  .grid{display:grid; gap:var(--space-4);}
+  .cols-auto{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+
+  /* Sticky header */
+  .topbar{position:sticky; top:0; z-index:1100; background:var(--surface-card);
+    border-bottom:1px solid var(--border-default); backdrop-filter:blur(8px);}
+  .topbar-inner{max-width:1180px; margin:0 auto; padding:var(--space-3) var(--space-6);
+    display:flex; align-items:center; justify-content:space-between; gap:var(--space-4);}
+  .brand{display:flex; align-items:center; gap:var(--space-3); font-weight:var(--fw-bold); font-size:var(--text-h4);}
+  .logo{width:32px; height:32px; border-radius:var(--radius-md);
+    background:linear-gradient(135deg,var(--color-primary-500),var(--color-primary-700));
+    display:grid; place-items:center; color:#fff; font-weight:700; font-size:16px; box-shadow:var(--shadow-sm);}
+  .nav-pills{display:flex; gap:var(--space-1); flex-wrap:wrap;}
+  .nav-pills a{font-size:var(--text-body-sm); color:var(--text-secondary); padding:6px 10px;
+    border-radius:var(--radius-full);}
+  .nav-pills a:hover{background:var(--surface-sunken); text-decoration:none; color:var(--text-primary);}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,var(--color-primary-600),var(--color-primary-800));
+    color:#fff; border-radius:var(--radius-2xl); padding:var(--space-12) var(--space-10);
+    margin-bottom:var(--space-16); box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
+  .hero::after{content:""; position:absolute; right:-60px; top:-60px; width:260px; height:260px;
+    background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%); border-radius:50%;}
+  .hero h1{font-size:var(--text-display); line-height:var(--lh-tight); color:#fff; letter-spacing:-0.02em;}
+  .hero p{font-size:var(--text-body-lg); color:rgba(255,255,255,0.9); max-width:60ch; margin:0;}
+  .hero .meta{margin-top:var(--space-6); display:flex; gap:var(--space-2); flex-wrap:wrap;}
+  .hero .chip{background:rgba(255,255,255,0.15); padding:4px 12px; border-radius:var(--radius-full);
+    font-size:var(--text-body-sm); font-weight:var(--fw-medium);}
+
+  /* Swatches */
+  .swatch-grid{display:grid; grid-template-columns:repeat(11,1fr); gap:var(--space-1); margin-bottom:var(--space-2);}
+  .swatch{aspect-ratio:1/1.15; border-radius:var(--radius-sm); position:relative; display:flex;
+    flex-direction:column; justify-content:flex-end; padding:6px; font-size:10px; font-weight:600;
+    line-height:1.2; border:1px solid rgba(0,0,0,0.04);}
+  .swatch .hex{font-weight:400; font-size:8px; opacity:0.85; font-family:var(--font-mono);}
+  .on-light{color:var(--color-neutral-900);} .on-dark{color:#fff;}
+  .scale-label{font-size:var(--text-body-sm); font-weight:var(--fw-semibold); margin:var(--space-4) 0 var(--space-2);
+    display:flex; align-items:center; gap:var(--space-2);}
+  .dot{width:10px; height:10px; border-radius:50%;}
+
+  /* Semantic cards */
+  .sem-card{border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--border-default); background:var(--surface-card);}
+  .sem-swatch{height:56px;} .sem-body{padding:var(--space-3);}
+  .sem-body .name{font-weight:var(--fw-semibold); font-size:var(--text-body-sm);}
+  .sem-body .hex{font-family:var(--font-mono); font-size:var(--text-caption); color:var(--text-muted);}
+
+  /* Type rows */
+  .type-row{padding:var(--space-4) 0; border-bottom:1px solid var(--border-default);
+    display:grid; grid-template-columns:150px 1fr; gap:var(--space-6); align-items:baseline;}
+  .type-row .token{color:var(--text-muted); font-family:var(--font-mono); font-size:var(--text-caption);}
+
+  /* Cards */
+  .card{background:var(--surface-card); border:1px solid var(--border-default);
+    border-radius:var(--radius-lg); padding:var(--space-6); box-shadow:var(--shadow-sm);}
+  .demo{background:var(--surface-card); border:1px solid var(--border-default);
+    border-radius:var(--radius-md); padding:var(--space-5);}
+  .demo-label{font-size:var(--text-caption); color:var(--text-muted); font-family:var(--font-mono);
+    margin-bottom:var(--space-3); text-transform:uppercase; letter-spacing:0.04em;}
+  .row{display:flex; gap:var(--space-3); flex-wrap:wrap; align-items:center;}
+
+  /* Buttons */
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:var(--space-2);
+    height:40px; padding:0 var(--space-5); border-radius:var(--radius-md); border:1px solid transparent;
+    cursor:pointer; font-family:inherit; font-size:var(--text-body-sm); font-weight:var(--fw-semibold);
+    transition:background var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out),
+      transform var(--dur-fast) var(--ease-out); position:relative;}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:none; box-shadow:var(--focus-ring);}
+  .btn-primary{background:var(--color-primary-600); color:#fff;}
+  .btn-primary:hover{background:var(--color-primary-700);}
+  .btn-primary:active{background:var(--color-primary-800);}
+  .btn-secondary{background:var(--surface-card); color:var(--color-primary-700); border-color:var(--color-primary-300);}
+  .btn-secondary:hover{background:var(--color-primary-50); border-color:var(--color-primary-500);}
+  :root[data-theme="dark"] .btn-secondary{color:var(--color-primary-300);}
+  :root[data-theme="dark"] .btn-secondary:hover{background:var(--color-primary-950);}
+  .btn-ghost{background:transparent; color:var(--text-secondary);}
+  .btn-ghost:hover{background:var(--surface-sunken); color:var(--text-primary);}
+  .btn-ai{background:linear-gradient(135deg,var(--color-accent-500),var(--color-accent-700)); color:#fff;}
+  .btn-ai:hover{background:linear-gradient(135deg,var(--color-accent-600),var(--color-accent-700));}
+  .btn-destructive{background:var(--color-error); color:#fff;}
+  .btn-destructive:hover{background:#B91C1C;}
+  .btn:disabled,.btn-disabled{background:var(--surface-sunken); color:var(--text-muted);
+    cursor:not-allowed; border-color:transparent; box-shadow:none; transform:none;}
+  .btn-sm{height:32px; padding:0 var(--space-3); font-size:var(--text-caption);}
+  .btn-lg{height:48px; padding:0 var(--space-6); font-size:var(--text-body);}
+  .spinner{width:14px; height:14px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff;
+    border-radius:50%; animation:spin 0.6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* Inputs */
+  .field{max-width:340px;}
+  .field label{display:block; margin-bottom:6px; font-size:var(--text-body-sm); font-weight:var(--fw-medium); color:var(--text-primary);}
+  .field .req{color:var(--color-error);}
+  .input{width:100%; height:40px; padding:0 var(--space-3); background:var(--surface-card);
+    color:var(--text-primary); border:1px solid var(--border-strong); border-radius:var(--radius-md);
+    font-family:inherit; font-size:var(--text-body); transition:border var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);}
+  .input::placeholder{color:var(--text-muted);}
+  .input:focus{outline:none; border-color:var(--color-primary-500); box-shadow:var(--focus-ring);}
+  .input.is-error{border-color:var(--color-error);}
+  .input.is-error:focus{box-shadow:0 0 0 3px rgba(220,38,38,0.30);}
+  .input:disabled{background:var(--surface-sunken); color:var(--text-muted); cursor:not-allowed;}
+  .hint{font-size:var(--text-caption); color:var(--text-muted); margin-top:4px;}
+  .err{font-size:var(--text-caption); color:var(--color-error); margin-top:4px; display:flex; align-items:center; gap:4px; font-weight:var(--fw-medium);}
+  .input-wrap{position:relative;}
+  .input-wrap .ic{position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted);}
+  .input-wrap .input{padding-left:34px;}
+
+  /* Toggle / checkbox / radio */
+  .toggle{position:relative; width:44px; height:24px; background:var(--color-neutral-300);
+    border-radius:var(--radius-full); cursor:pointer; transition:background var(--dur-fast) var(--ease-out); border:none;}
+  .toggle::after{content:""; position:absolute; top:2px; left:2px; width:20px; height:20px; background:#fff;
+    border-radius:50%; box-shadow:var(--shadow-sm); transition:transform var(--dur-fast) var(--ease-spring);}
+  .toggle[aria-checked="true"]{background:var(--color-primary-600);}
+  .toggle[aria-checked="true"]::after{transform:translateX(20px);}
+  .toggle:focus-visible{outline:none; box-shadow:var(--focus-ring);}
+  .chk{display:inline-flex; align-items:center; gap:var(--space-2); font-size:var(--text-body-sm);}
+  .chk-box{width:20px; height:20px; border:2px solid var(--border-strong); border-radius:var(--radius-sm);
+    display:grid; place-items:center; color:#fff;}
+  .chk-box.on{background:var(--color-primary-600); border-color:var(--color-primary-600);}
+  .chk-box.radio{border-radius:50%;}
+  .chk-box.radio .dotx{width:8px; height:8px; border-radius:50%; background:#fff;}
+
+  /* Badges & chips */
+  .badge{display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:var(--radius-full);
+    font-size:var(--text-caption); font-weight:var(--fw-semibold); border:1px solid transparent;}
+  .badge-success{background:var(--color-success-bg); color:var(--color-success-fg); border-color:var(--color-success-border);}
+  .badge-warning{background:var(--color-warning-bg); color:var(--color-warning-fg); border-color:var(--color-warning-border);}
+  .badge-error{background:var(--color-error-bg); color:var(--color-error-fg); border-color:var(--color-error-border);}
+  .badge-info{background:var(--color-info-bg); color:var(--color-info-fg); border-color:var(--color-info-border);}
+  .badge-neutral{background:var(--surface-sunken); color:var(--text-secondary); border-color:var(--border-default);}
+  .dot-status{width:6px; height:6px; border-radius:50%; display:inline-block;}
+
+  /* Alerts */
+  .alert{padding:var(--space-3) var(--space-4); border-radius:var(--radius-md); border:1px solid;
+    border-left-width:4px; margin-bottom:var(--space-3); display:flex; gap:var(--space-3); align-items:flex-start;}
+  .alert .ttl{font-weight:var(--fw-semibold); margin-bottom:2px;}
+  .alert .ic{flex-shrink:0; margin-top:1px;}
+  .alert-success{background:var(--color-success-bg); border-color:var(--color-success); color:var(--color-success-fg);}
+  .alert-warning{background:var(--color-warning-bg); border-color:var(--color-warning); color:var(--color-warning-fg);}
+  .alert-error{background:var(--color-error-bg); border-color:var(--color-error); color:var(--color-error-fg);}
+  .alert-info{background:var(--color-info-bg); border-color:var(--color-info); color:var(--color-info-fg);}
+
+  /* Avatar */
+  .avatar{width:40px; height:40px; border-radius:50%; display:grid; place-items:center; font-weight:var(--fw-semibold);
+    color:#fff; font-size:var(--text-body-sm); background:var(--color-primary-600);}
+  .avatar-group{display:flex;} .avatar-group .avatar{border:2px solid var(--surface-card); margin-left:-10px;}
+  .avatar-group .avatar:first-child{margin-left:0;}
+
+  /* Table */
+  .table-wrap{overflow-x:auto; border:1px solid var(--border-default); border-radius:var(--radius-lg);}
+  table{width:100%; border-collapse:collapse; font-size:var(--text-body-sm); min-width:520px;}
+  thead th{text-align:left; padding:var(--space-3) var(--space-4); background:var(--surface-sunken);
+    color:var(--text-secondary); font-weight:var(--fw-semibold); font-size:var(--text-caption);
+    text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid var(--border-default);}
+  tbody td{padding:var(--space-3) var(--space-4); border-bottom:1px solid var(--border-default); color:var(--text-primary);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--surface-sunken);}
+
+  /* Tabs */
+  .tabs{display:flex; gap:var(--space-1); border-bottom:1px solid var(--border-default); margin-bottom:var(--space-4);}
+  .tab{padding:var(--space-3) var(--space-4); font-size:var(--text-body-sm); font-weight:var(--fw-medium);
+    color:var(--text-secondary); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; background:none; border-top:none; border-left:none; border-right:none;}
+  .tab.active{color:var(--color-primary-700); border-bottom-color:var(--color-primary-600);}
+  :root[data-theme="dark"] .tab.active{color:var(--color-primary-300);}
+
+  /* Spacing viz */
+  .space-bar{background:var(--color-primary-500); height:16px; border-radius:2px;}
+
+  /* Motion demo */
+  .motion-box{width:56px; height:56px; border-radius:var(--radius-md); background:var(--color-primary-600);
+    display:grid; place-items:center; color:#fff; font-size:var(--text-caption); font-weight:600;}
+  .motion-card:hover .motion-box{transform:translateY(-8px); box-shadow:var(--shadow-lg);}
+  .motion-box{transition:transform var(--dur-normal) var(--ease-spring), box-shadow var(--dur-normal) var(--ease-out);}
+
+  /* Theme toggle */
+  .theme-toggle{display:inline-flex; align-items:center; gap:var(--space-2); background:var(--surface-sunken);
+    border:1px solid var(--border-default); border-radius:var(--radius-full); padding:6px 12px;
+    cursor:pointer; color:var(--text-primary); font-size:var(--text-body-sm); font-weight:var(--fw-medium); font-family:inherit;}
+  .theme-toggle:focus-visible{outline:none; box-shadow:var(--focus-ring);}
+
+  .callout{background:var(--color-primary-50); border:1px solid var(--color-primary-200);
+    border-radius:var(--radius-lg); padding:var(--space-4) var(--space-5); color:var(--color-primary-900);}
+  :root[data-theme="dark"] .callout{background:var(--color-primary-950); border-color:var(--color-primary-800); color:var(--color-primary-100);}
+  .callout code{background:rgba(37,99,235,0.12);}
+
+  .dodont{display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);}
+  .do,.dont{border-radius:var(--radius-md); padding:var(--space-4); border:1px solid;}
+  .do{background:var(--color-success-bg); border-color:var(--color-success-border);}
+  .dont{background:var(--color-error-bg); border-color:var(--color-error-border);}
+  .do h4,.dont h4{margin:0 0 var(--space-2); font-size:var(--text-body-sm);}
+  .do h4{color:var(--color-success-fg);} .dont h4{color:var(--color-error-fg);}
+  .do ul,.dont ul{margin:0; padding-left:18px; font-size:var(--text-body-sm);}
+  .do li,.dont li{margin-bottom:4px;}
+  .do{color:var(--color-success-fg);} .dont{color:var(--color-error-fg);}
+
+  @media (max-width:640px){
+    .type-row{grid-template-columns:1fr; gap:var(--space-1);}
+    .swatch-grid{grid-template-columns:repeat(6,1fr);}
+    .dodont{grid-template-columns:1fr;}
+    .hero{padding:var(--space-8) var(--space-6);}
+    .hero h1{font-size:var(--text-h1);}
+    .nav-pills{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="logo">V</span> VietCMS <span style="font-weight:400;color:var(--text-muted);font-size:13px;">Design System</span></div>
+    <nav class="nav-pills" aria-label="Mục lục">
+      <a href="#colors">Màu</a><a href="#type">Chữ</a><a href="#spacing">Spacing</a>
+      <a href="#buttons">Buttons</a><a href="#forms">Forms</a><a href="#feedback">Feedback</a>
+      <a href="#data">Data</a><a href="#motion">Motion</a><a href="#a11y">A11y</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Đổi giao diện sáng/tối">
+      <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</div>
+
+<div class="shell">
+
+  <header class="hero">
+    <h1>VietCMS Design System</h1>
+    <p>Ngôn ngữ thiết kế thống nhất cho nền tảng CMS no-code dành cho đội marketing mid-market Việt. Xây trên nền “Modern Trust” — đáng tin cậy, chuyên nghiệp, nhưng hiện đại và thân thiện.</p>
+    <div class="meta">
+      <span class="chip">v1.0</span><span class="chip">WCAG 2.1 AA</span>
+      <span class="chip">Blue · Cool Gray · Violet (AI)</span><span class="chip">Inter · 8px grid</span>
+    </div>
+  </header>
+
+  <!-- ============ COLORS ============ -->
+  <section class="section" id="colors">
+    <h2 class="section-title"><span class="num">01</span> Bảng màu / Color System</h2>
+    <p class="lede">Primary (thương hiệu) + Neutral (80% giao diện) + Semantic (trạng thái) + Accent violet (dành riêng cho tính năng AI). Mọi cặp text/nền đều đạt tối thiểu 4.5:1.</p>
+
+    <div class="scale-label"><span class="dot" style="background:var(--color-primary-600)"></span> Primary — Blue (brand, trust)</div>
+    <div class="swatch-grid">
+      <div class="swatch on-light" style="background:var(--color-primary-50)">50<span class="hex">#EFF5FF</span></div>
+      <div class="swatch on-light" style="background:var(--color-primary-100)">100<span class="hex">#DBE8FE</span></div>
+      <div class="swatch on-light" style="background:var(--color-primary-200)">200<span class="hex">#BFD6FE</span></div>
+      <div class="swatch on-light" style="background:var(--color-primary-300)">300<span class="hex">#93BBFD</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-400)">400<span class="hex">#609AFA</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-500)">500<span class="hex">#3B82F6</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-600)">600<span class="hex">#2563EB</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-700)">700<span class="hex">#1D4ED8</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-800)">800<span class="hex">#1E40AF</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-900)">900<span class="hex">#1E3A8A</span></div>
+      <div class="swatch on-dark" style="background:var(--color-primary-950)">950<span class="hex">#172554</span></div>
+    </div>
+    <p class="hint"><strong>600</strong> = base cho nút &amp; link (white text 5.17:1 ✓) · <strong>700</strong> hover · <strong>800</strong> pressed · <strong>50–100</strong> nền nhạt · <strong>700+</strong> text on light.</p>
+
+    <div class="scale-label"><span class="dot" style="background:var(--color-neutral-600)"></span> Neutral — Cool Gray</div>
+    <div class="swatch-grid">
+      <div class="swatch on-light" style="background:var(--color-neutral-0);border:1px solid var(--border-strong)">0<span class="hex">#FFFFFF</span></div>
+      <div class="swatch on-light" style="background:var(--color-neutral-50)">50<span class="hex">#F8FAFC</span></div>
+      <div class="swatch on-light" style="background:var(--color-neutral-100)">100<span class="hex">#F1F5F9</span></div>
+      <div class="swatch on-light" style="background:var(--color-neutral-200)">200<span class="hex">#E2E8F0</span></div>
+      <div class="swatch on-light" style="background:var(--color-neutral-300)">300<span class="hex">#CBD5E1</span></div>
+      <div class="swatch on-light" style="background:var(--color-neutral-400)">400<span class="hex">#94A3B8</span></div>
+      <div class="swatch on-dark" style="background:var(--color-neutral-500)">500<span class="hex">#64748B</span></div>
+      <div class="swatch on-dark" style="background:var(--color-neutral-600)">600<span class="hex">#475569</span></div>
+      <div class="swatch on-dark" style="background:var(--color-neutral-700)">700<span class="hex">#334155</span></div>
+      <div class="swatch on-dark" style="background:var(--color-neutral-800)">800<span class="hex">#1E293B</span></div>
+      <div class="swatch on-dark" style="background:var(--color-neutral-900)">900<span class="hex">#0F172A</span></div>
+    </div>
+    <p class="hint"><strong>900</strong> body text (16:1 AAA) · <strong>600</strong> secondary (7.4:1) · <strong>500</strong> muted (4.8:1) · <strong>200</strong> viền · <strong>50</strong> nền trang.</p>
+
+    <div class="scale-label"><span class="dot" style="background:var(--color-accent-600)"></span> Accent — Violet (chỉ dùng cho tính năng AI)</div>
+    <div class="swatch-grid" style="grid-template-columns:repeat(6,1fr);max-width:640px">
+      <div class="swatch on-light" style="background:var(--color-accent-50)">50<span class="hex">#F5F3FF</span></div>
+      <div class="swatch on-light" style="background:var(--color-accent-100)">100<span class="hex">#EDE9FE</span></div>
+      <div class="swatch on-light" style="background:var(--color-accent-300)">300<span class="hex">#C4B5FD</span></div>
+      <div class="swatch on-dark" style="background:var(--color-accent-500)">500<span class="hex">#8B5CF6</span></div>
+      <div class="swatch on-dark" style="background:var(--color-accent-600)">600<span class="hex">#7C3AED</span></div>
+      <div class="swatch on-dark" style="background:var(--color-accent-700)">700<span class="hex">#6D28D9</span></div>
+    </div>
+
+    <div class="scale-label"><span class="dot" style="background:var(--color-success)"></span> Semantic</div>
+    <div class="grid cols-auto">
+      <div class="sem-card"><div class="sem-swatch" style="background:var(--color-success)"></div><div class="sem-body"><div class="name">Success</div><div class="hex">#059669 · fg #065F46 · bg #D1FAE5</div></div></div>
+      <div class="sem-card"><div class="sem-swatch" style="background:var(--color-warning)"></div><div class="sem-body"><div class="name">Warning</div><div class="hex">#D97706 · fg #92400E · bg #FEF3C7</div></div></div>
+      <div class="sem-card"><div class="sem-swatch" style="background:var(--color-error)"></div><div class="sem-body"><div class="name">Error</div><div class="hex">#DC2626 · fg #991B1B · bg #FEE2E2</div></div></div>
+      <div class="sem-card"><div class="sem-swatch" style="background:var(--color-info)"></div><div class="sem-body"><div class="name">Info</div><div class="hex">#2563EB · fg #1E40AF · bg #DBEAFE</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ TYPOGRAPHY ============ -->
+  <section class="section" id="type">
+    <h2 class="section-title"><span class="num">02</span> Typography</h2>
+    <p class="lede">Font <strong>Inter</strong> — hỗ trợ đầy đủ dấu tiếng Việt, tối ưu màn hình. Type scale tỉ lệ ~1.25 (major third). Tối đa 2 họ font (sans + mono).</p>
+    <div class="card">
+      <div class="type-row"><span class="token">display · 48/700 · -0.02em</span><span style="font-size:48px;font-weight:700;line-height:1.15;letter-spacing:-0.02em">Xuất bản trong vài phút</span></div>
+      <div class="type-row"><span class="token">h1 · 32/700</span><span style="font-size:32px;font-weight:700;line-height:1.25;letter-spacing:-0.02em">Quản lý nội dung website</span></div>
+      <div class="type-row"><span class="token">h2 · 24/600</span><span style="font-size:24px;font-weight:600;line-height:1.3">Bài viết &amp; Trang</span></div>
+      <div class="type-row"><span class="token">h3 · 20/600</span><span style="font-size:20px;font-weight:600;line-height:1.4">Danh mục nội dung</span></div>
+      <div class="type-row"><span class="token">h4 · 16/600</span><span style="font-size:16px;font-weight:600;line-height:1.4">Tiêu đề thẻ (card)</span></div>
+      <div class="type-row"><span class="token">body-lg · 18/400</span><span style="font-size:18px;line-height:1.6">Đoạn văn dài — trình soạn thảo trực quan giúp biên tập viên tạo nội dung mà không cần lập trình.</span></div>
+      <div class="type-row"><span class="token">body · 16/400</span><span style="font-size:16px;line-height:1.5">Văn bản giao diện mặc định — dùng cho phần lớn nội dung.</span></div>
+      <div class="type-row"><span class="token">body-sm · 14/400</span><span style="font-size:14px;line-height:1.5">Thông tin phụ, nhãn trường, chú thích bảng.</span></div>
+      <div class="type-row"><span class="token">caption · 12/400</span><span style="font-size:12px;line-height:1.4">Meta · cập nhật 2 phút trước · SEO score 92</span></div>
+      <div class="type-row"><span class="token">overline · 12/600 · caps</span><span style="font-size:12px;font-weight:600;line-height:1.2;text-transform:uppercase;letter-spacing:0.06em">Trạng thái xuất bản</span></div>
+      <div class="type-row"><span class="token">mono · 14/400</span><span style="font-size:14px;font-family:var(--font-mono)">slug: /bai-viet/ra-mat-vietcms</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SPACING ============ -->
+  <section class="section" id="spacing">
+    <h2 class="section-title"><span class="num">03</span> Spacing &amp; Radius</h2>
+    <p class="lede">Lưới 8px. Chỉ dùng giá trị trong scale — không tự bịa “13px”. base = 16px.</p>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="card">
+        <div class="demo-label">Spacing scale</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="row"><div class="space-bar" style="width:4px"></div><code>space-1 · 4px</code></div>
+          <div class="row"><div class="space-bar" style="width:8px"></div><code>space-2 · 8px</code></div>
+          <div class="row"><div class="space-bar" style="width:12px"></div><code>space-3 · 12px</code></div>
+          <div class="row"><div class="space-bar" style="width:16px"></div><code>space-4 · 16px (base)</code></div>
+          <div class="row"><div class="space-bar" style="width:24px"></div><code>space-6 · 24px</code></div>
+          <div class="row"><div class="space-bar" style="width:32px"></div><code>space-8 · 32px</code></div>
+          <div class="row"><div class="space-bar" style="width:48px"></div><code>space-12 · 48px</code></div>
+          <div class="row"><div class="space-bar" style="width:64px"></div><code>space-16 · 64px</code></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="demo-label">Radius &amp; Elevation</div>
+        <div class="row" style="gap:16px;margin-bottom:20px">
+          <div style="text-align:center"><div style="width:56px;height:56px;background:var(--color-primary-100);border:1px solid var(--color-primary-300);border-radius:6px"></div><code>sm 6</code></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;background:var(--color-primary-100);border:1px solid var(--color-primary-300);border-radius:8px"></div><code>md 8</code></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;background:var(--color-primary-100);border:1px solid var(--color-primary-300);border-radius:12px"></div><code>lg 12</code></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;background:var(--color-primary-100);border:1px solid var(--color-primary-300);border-radius:16px"></div><code>xl 16</code></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;background:var(--color-primary-100);border:1px solid var(--color-primary-300);border-radius:9999px"></div><code>full</code></div>
+        </div>
+        <div class="row" style="gap:16px">
+          <div style="width:64px;height:48px;background:var(--surface-card);border-radius:8px;box-shadow:var(--shadow-sm);display:grid;place-items:center;font-size:11px">sm</div>
+          <div style="width:64px;height:48px;background:var(--surface-card);border-radius:8px;box-shadow:var(--shadow-md);display:grid;place-items:center;font-size:11px">md</div>
+          <div style="width:64px;height:48px;background:var(--surface-card);border-radius:8px;box-shadow:var(--shadow-lg);display:grid;place-items:center;font-size:11px">lg</div>
+          <div style="width:64px;height:48px;background:var(--surface-card);border-radius:8px;box-shadow:var(--shadow-xl);display:grid;place-items:center;font-size:11px">xl</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BUTTONS ============ -->
+  <section class="section" id="buttons">
+    <h2 class="section-title"><span class="num">04</span> Buttons</h2>
+    <p class="lede">Variants + states. Nút AI dùng gradient violet để user nhận diện tính năng trợ lý. Vùng chạm ≥ 44px trên mobile.</p>
+    <div class="grid cols-auto">
+      <div class="demo"><div class="demo-label">Variants</div>
+        <div class="row"><button class="btn btn-primary">Xuất bản</button><button class="btn btn-secondary">Lưu nháp</button><button class="btn btn-ghost">Huỷ</button></div>
+      </div>
+      <div class="demo"><div class="demo-label">AI &amp; Destructive</div>
+        <div class="row"><button class="btn btn-ai">✨ Viết bằng AI</button><button class="btn btn-destructive">Xoá</button></div>
+      </div>
+      <div class="demo"><div class="demo-label">States</div>
+        <div class="row"><button class="btn btn-primary">Default</button><button class="btn btn-disabled" disabled>Disabled</button><button class="btn btn-primary"><span class="spinner"></span> Đang lưu…</button></div>
+      </div>
+      <div class="demo"><div class="demo-label">Sizes</div>
+        <div class="row"><button class="btn btn-primary btn-sm">Small</button><button class="btn btn-primary">Medium</button><button class="btn btn-primary btn-lg">Large</button></div>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:12px">Nhấn <kbd>Tab</kbd> để thấy focus ring 3px (không dùng chuột). Mọi nút là <code>&lt;button&gt;</code> thật, hỗ trợ Enter/Space.</p>
+  </section>
+
+  <!-- ============ FORMS ============ -->
+  <section class="section" id="forms">
+    <h2 class="section-title"><span class="num">05</span> Form Inputs</h2>
+    <p class="lede">Label luôn hiển thị (không dùng placeholder làm label). Lỗi báo bằng màu + icon + text. Focus ring rõ ràng.</p>
+    <div class="grid cols-auto">
+      <div class="demo"><div class="demo-label">Default + icon</div>
+        <div class="field"><label for="i1">Tiêu đề bài viết <span class="req" aria-hidden="true">*</span></label>
+          <div class="input-wrap"><span class="ic" aria-hidden="true">🔎</span><input id="i1" class="input" type="text" placeholder="Nhập tiêu đề…"></div>
+          <div class="hint">Tối ưu 50–60 ký tự cho SEO.</div></div>
+      </div>
+      <div class="demo"><div class="demo-label">Focused</div>
+        <div class="field"><label for="i2">Đường dẫn (slug)</label>
+          <input id="i2" class="input" type="text" value="ra-mat-vietcms" style="border-color:var(--color-primary-500);box-shadow:var(--focus-ring)"></div>
+      </div>
+      <div class="demo"><div class="demo-label">Error</div>
+        <div class="field"><label for="i3">Email quản trị</label>
+          <input id="i3" class="input is-error" type="email" value="admin@" aria-invalid="true" aria-describedby="i3e">
+          <div class="err" id="i3e"><span aria-hidden="true">⚠</span> Email chưa hợp lệ — thiếu tên miền.</div></div>
+      </div>
+      <div class="demo"><div class="demo-label">Disabled</div>
+        <div class="field"><label for="i4">Gói đăng ký</label>
+          <input id="i4" class="input" type="text" value="Business (đang khoá)" disabled></div>
+      </div>
+      <div class="demo"><div class="demo-label">Toggle · Checkbox · Radio</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="row" style="gap:10px"><button class="toggle" role="switch" aria-checked="true" aria-label="Bật SEO tự động" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked')==='true'?'false':'true')"></button> <span style="font-size:14px">SEO tự động</span></div>
+          <div class="chk"><span class="chk-box on">✓</span> Cho phép bình luận</div>
+          <div class="chk"><span class="chk-box radio on"><span class="dotx"></span></span> Xuất bản ngay</div>
+        </div>
+      </div>
+      <div class="demo"><div class="demo-label">Select</div>
+        <div class="field"><label for="i5">Trạng thái</label>
+          <select id="i5" class="input"><option>Bản nháp</option><option>Chờ duyệt</option><option>Đã xuất bản</option></select></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEEDBACK ============ -->
+  <section class="section" id="feedback">
+    <h2 class="section-title"><span class="num">06</span> Feedback — Badges &amp; Alerts</h2>
+    <p class="lede">Trạng thái không chỉ dựa vào màu — luôn kèm icon/text/chấm để đạt a11y.</p>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="demo"><div class="demo-label">Badges &amp; status</div>
+        <div class="row" style="margin-bottom:14px">
+          <span class="badge badge-success"><span class="dot-status" style="background:var(--color-success)"></span> Đã xuất bản</span>
+          <span class="badge badge-warning"><span class="dot-status" style="background:var(--color-warning)"></span> Chờ duyệt</span>
+          <span class="badge badge-error"><span class="dot-status" style="background:var(--color-error)"></span> Từ chối</span>
+          <span class="badge badge-info">Bản nháp</span>
+          <span class="badge badge-neutral">Lưu trữ</span>
+        </div>
+        <div class="demo-label">Avatars</div>
+        <div class="row">
+          <div class="avatar">HL</div>
+          <div class="avatar" style="background:var(--color-accent-600)">TM</div>
+          <div class="avatar-group"><div class="avatar">A</div><div class="avatar" style="background:var(--color-neutral-500)">B</div><div class="avatar" style="background:var(--color-success)">C</div><div class="avatar" style="background:var(--color-neutral-300);color:var(--color-neutral-700)">+5</div></div>
+        </div>
+      </div>
+      <div class="demo"><div class="demo-label">Alerts</div>
+        <div class="alert alert-success"><span class="ic" aria-hidden="true">✓</span><div><div class="ttl">Đã xuất bản</div>Bài viết đã lên website công khai.</div></div>
+        <div class="alert alert-warning"><span class="ic" aria-hidden="true">⚠</span><div><div class="ttl">Cần kiểm tra</div>Điểm SEO đang ở mức 68 — nên cải thiện meta description.</div></div>
+        <div class="alert alert-error"><span class="ic" aria-hidden="true">✕</span><div><div class="ttl">Lỗi lưu</div>Không kết nối được máy chủ. Thử lại sau.</div></div>
+        <div class="alert alert-info"><span class="ic" aria-hidden="true">ℹ</span><div><div class="ttl">Mẹo</div>Trợ lý AI có thể gợi ý tiêu đề chuẩn SEO.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DATA ============ -->
+  <section class="section" id="data">
+    <h2 class="section-title"><span class="num">07</span> Data — Table, Tabs &amp; Card</h2>
+    <p class="lede">Bảng nội dung là màn hình trung tâm của biên tập viên. Sortable header, row hover, badge trạng thái.</p>
+
+    <div class="tabs" role="tablist" style="max-width:400px">
+      <button class="tab active" role="tab" aria-selected="true">Tất cả</button>
+      <button class="tab" role="tab" aria-selected="false">Đã xuất bản</button>
+      <button class="tab" role="tab" aria-selected="false">Chờ duyệt</button>
+      <button class="tab" role="tab" aria-selected="false">Nháp</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Danh sách bài viết</caption>
+        <thead><tr><th scope="col">Tiêu đề ▾</th><th scope="col">Tác giả</th><th scope="col">Trạng thái</th><th scope="col">SEO</th><th scope="col">Cập nhật</th></tr></thead>
+        <tbody>
+          <tr><td>Ra mắt VietCMS 1.0</td><td>Hồng Loan</td><td><span class="badge badge-success"><span class="dot-status" style="background:var(--color-success)"></span> Đã xuất bản</span></td><td>92</td><td>2 phút trước</td></tr>
+          <tr><td>Hướng dẫn SEO cho người mới</td><td>Thanh Minh</td><td><span class="badge badge-warning"><span class="dot-status" style="background:var(--color-warning)"></span> Chờ duyệt</span></td><td>78</td><td>1 giờ trước</td></tr>
+          <tr><td>5 mẹo tối ưu tốc độ tải</td><td>Quốc Anh</td><td><span class="badge badge-info">Bản nháp</span></td><td>—</td><td>Hôm qua</td></tr>
+          <tr><td>Chính sách nội dung</td><td>Hồng Loan</td><td><span class="badge badge-neutral">Lưu trữ</span></td><td>85</td><td>3 ngày trước</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid cols-auto" style="margin-top:16px">
+      <div class="card">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px"><h4 style="margin:0">Bài viết tháng này</h4><span class="badge badge-success">+12%</span></div>
+        <div style="font-size:32px;font-weight:700">248</div>
+        <p style="color:var(--text-muted);margin:4px 0 0;font-size:14px">bởi 18 biên tập viên</p>
+      </div>
+      <div class="card" style="box-shadow:var(--shadow-md)">
+        <div class="row" style="gap:10px;margin-bottom:8px"><div class="avatar" style="background:var(--color-accent-600)">✨</div><h4 style="margin:0">Trợ lý AI</h4></div>
+        <p style="color:var(--text-secondary);margin:0;font-size:14px">Gợi ý tiêu đề &amp; tối ưu nội dung tiếng Việt trong một cú nhấp.</p>
+        <button class="btn btn-ai btn-sm" style="margin-top:12px">✨ Dùng thử</button>
+      </div>
+      <div class="card">
+        <div class="demo-label">Empty state</div>
+        <div style="text-align:center;padding:12px 0"><div style="font-size:40px">📝</div><p style="margin:8px 0 12px;color:var(--text-muted);font-size:14px">Chưa có bài viết nào.</p><button class="btn btn-primary btn-sm">Tạo bài đầu tiên</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOTION ============ -->
+  <section class="section" id="motion">
+    <h2 class="section-title"><span class="num">08</span> Motion</h2>
+    <p class="lede">Motion phải có mục đích (feedback / hierarchy / continuity), không trang trí. Tôn trọng <code>prefers-reduced-motion</code>.</p>
+    <div class="grid cols-auto">
+      <div class="demo motion-card"><div class="demo-label">Hover lift · spring</div><div class="motion-box">Hover</div><p class="hint" style="margin-top:10px">250ms · ease-spring</p></div>
+      <div class="demo"><div class="demo-label">Durations</div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.9;color:var(--text-secondary)">
+          <li><code>fast 150ms</code> — hover, focus</li>
+          <li><code>normal 250ms</code> — enter, transition</li>
+          <li><code>slow 400ms</code> — modal, page</li>
+        </ul>
+      </div>
+      <div class="demo"><div class="demo-label">Easing</div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.9;color:var(--text-secondary)">
+          <li><code>out</code> — phần tử vào</li>
+          <li><code>in-out</code> — di chuyển</li>
+          <li><code>spring</code> — nhấn nhá vui</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ A11Y ============ -->
+  <section class="section" id="a11y">
+    <h2 class="section-title"><span class="num">09</span> Accessibility (WCAG 2.1 AA)</h2>
+    <p class="lede">A11y là mặc định, không phải bổ sung. Tất cả cặp màu dưới đây đã được kiểm tra tỉ lệ tương phản.</p>
+    <div class="callout" style="margin-bottom:16px">
+      <strong>Contrast đã verify:</strong> neutral-900/white <strong>16:1</strong> (AAA) · neutral-600/white <strong>7.4:1</strong> · neutral-500/white <strong>4.8:1</strong> · white/primary-600 <strong>5.17:1</strong> · white/error <strong>4.5:1</strong> — tất cả ≥ AA.
+    </div>
+    <div class="dodont">
+      <div class="do"><h4>✓ Do</h4><ul>
+        <li>Trạng thái = màu + icon + text (không chỉ màu)</li>
+        <li>Focus ring 3px, tương phản ≥ 3:1</li>
+        <li>Vùng chạm ≥ 44×44px trên mobile</li>
+        <li>Label hiển thị cho mọi input</li>
+        <li>Heading đúng thứ bậc h1→h2→h3</li>
+      </ul></div>
+      <div class="dont"><h4>✕ Don't</h4><ul>
+        <li>Chỉ dùng màu đỏ để báo lỗi</li>
+        <li>Placeholder làm nhãn duy nhất</li>
+        <li>Body text dưới 4.5:1 contrast</li>
+        <li>Bỏ focus outline (<code>outline:none</code> mà không thay thế)</li>
+        <li>Auto-play animation không tắt được</li>
+      </ul></div>
+    </div>
+    <p class="hint" style="margin-top:16px">Chi tiết đầy đủ: xem <code>05-a11y-audit-v1.md</code> · Tokens cho dev: <code>05-design-tokens-v1.json</code></p>
+  </section>
+
+  <footer style="border-top:1px solid var(--border-default);padding-top:var(--space-6);color:var(--text-muted);font-size:var(--text-body-sm)">
+    VietCMS Design System v1.0 · Modern Trust (Blue) · 2026-07-20 · Living style guide — mở trong trình duyệt, copy vào Figma/code.
+  </footer>
+</div>
+
+<span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></span>
+
+<script>
+  (function(){
+    var root=document.documentElement, btn=document.getElementById('themeToggle'),
+        icon=document.getElementById('themeIcon'), label=document.getElementById('themeLabel');
+    function apply(mode){
+      root.setAttribute('data-theme',mode);
+      icon.textContent = mode==='dark' ? '☀️' : '🌙';
+      label.textContent = mode==='dark' ? 'Light' : 'Dark';
+    }
+    var start = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light';
+    apply(start);
+    btn.addEventListener('click',function(){
+      apply(root.getAttribute('data-theme')==='dark'?'light':'dark');
+    });
+    // Tabs demo
+    document.querySelectorAll('[role="tab"]').forEach(function(t){
+      t.addEventListener('click',function(){
+        document.querySelectorAll('[role="tab"]').forEach(function(x){x.classList.remove('active');x.setAttribute('aria-selected','false');});
+        t.classList.add('active'); t.setAttribute('aria-selected','true');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

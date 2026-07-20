@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Hàng chờ duyệt (Mobile)</title>
+<style>
+  :root{
+    --bg:#F9FAFB; --surface:#FFFFFF; --border:#E5E7EB; --line:#F3F4F6;
+    --t1:#1F2937; --t2:#6B7280; --tp:#9CA3AF; --int:#3B82F6; --int-2:#1D4ED8;
+    --ok:#059669; --ok-bg:#D1FAE5; --warn:#D97706; --warn-bg:#FEF3C7; --err:#DC2626;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',sans-serif;background:var(--bg);color:var(--t1);}
+  .meta{background:#111827;color:#fff;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .meta a{color:#93C5FD;text-decoration:none;}
+  .stage{max-width:1200px;margin:24px auto;padding:0 16px;display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+
+  .phone{width:340px;}
+  .phone .cap{text-align:center;font-size:12px;color:var(--t2);margin-bottom:8px;font-weight:600;}
+  .frame{border:10px solid #111827;border-radius:32px;overflow:hidden;background:var(--surface);box-shadow:0 8px 24px rgba(0,0,0,.12);}
+  .status{height:26px;background:#111827;}
+  .scr{height:600px;overflow:auto;background:var(--bg);}
+
+  .appbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 14px;display:flex;align-items:center;gap:10px;position:sticky;top:0;}
+  .appbar .title{font-weight:700;font-size:15px;}
+  .appbar .av{width:30px;height:30px;border-radius:50%;background:#E5E7EB;color:#6B7280;display:grid;place-items:center;font-size:12px;font-weight:700;margin-left:auto;}
+  .segtab{display:flex;gap:6px;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border);}
+  .segtab .s{font-size:12px;padding:5px 10px;border-radius:999px;background:var(--line);color:var(--t2);}
+  .segtab .s.on{background:#DBEAFE;color:var(--int-2);font-weight:600;}
+
+  .list{padding:12px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
+  .card .row{display:flex;align-items:center;gap:8px;}
+  .card h3{margin:0 0 6px;font-size:14px;line-height:1.35;}
+  .av-s{width:22px;height:22px;border-radius:50%;background:#E5E7EB;color:#6B7280;display:inline-grid;place-items:center;font-size:10px;font-weight:700;}
+  .muted{color:var(--t2);font-size:12px;}
+  .badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;}
+  .b-wait{background:var(--warn-bg);color:#92400E;}
+  .b-ok{background:var(--ok-bg);color:#065F46;}
+  .seo{font-size:11px;color:var(--t2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;}
+  .chev{margin-left:auto;color:var(--tp);}
+
+  /* detail */
+  .dtl{padding:14px;}
+  .preview{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .preview .imgph{background:linear-gradient(135deg,#E5E7EB,#F3F4F6);color:#9CA3AF;min-height:90px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;margin:10px 0;}
+  .preview p{font-size:13px;color:#374151;line-height:1.6;margin:6px 0;}
+  .metaline{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--t2);margin:10px 0;flex-wrap:wrap;}
+  .actionbar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 14px;display:flex;gap:10px;}
+  .btn{flex:1;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;text-align:center;}
+  .btn-ret{background:#fff;color:var(--err);border-color:#FCA5A5;}
+  .btn-app{background:var(--int);color:#fff;}
+  .notefield{margin-top:12px;}
+  .notefield textarea{width:100%;border:1px solid #D1D5DB;border-radius:8px;padding:10px;font-size:13px;min-height:56px;}
+
+  /* success + empty */
+  .center{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;gap:10px;}
+  .center .big{font-size:44px;}
+  .center p{color:var(--t2);font-size:13px;margin:0;}
+  .center .btn{flex:none;padding:10px 18px;}
+
+  .annot{max-width:1000px;margin:8px auto 40px;padding:14px 18px;background:#FFFBEB;border:1px solid #FCD34D;border-radius:10px;font-size:12.5px;color:#78350F;}
+  .annot b{color:#92400E;}
+</style>
+</head>
+<body>
+<div class="meta">
+  <span>Wireframe: <b>Hàng chờ duyệt</b> · US-05/06 · Persona: Hải (Trưởng phòng — duyệt trên điện thoại)</span>
+  <span>Mid-fi · Mobile 340px · v1.0 · <a href="04-prototype-index.html">← Prototype index</a></span>
+</div>
+
+<div class="stage">
+
+  <!-- 1. LIST -->
+  <div class="phone">
+    <div class="cap">① Danh sách chờ duyệt (default)</div>
+    <div class="frame"><div class="status"></div><div class="scr">
+      <div class="appbar"><span class="title">Chờ duyệt</span><span class="badge b-wait">3</span><span class="av">H</span></div>
+      <div class="segtab"><span class="s on">Chờ duyệt (3)</span><span class="s">Tất cả</span><span class="s">Đã duyệt</span></div>
+      <div class="list">
+        <div class="card" onclick="location.href='#detail'">
+          <h3>Ra mắt VietCMS 1.0</h3>
+          <div class="row"><span class="av-s">N</span><span class="muted">Ngọc · 2 phút trước</span><span class="chev">›</span></div>
+          <div class="row" style="margin-top:8px"><span class="badge b-wait">Chờ duyệt</span><span class="seo">SEO 92</span></div>
+        </div>
+        <div class="card">
+          <h3>Hướng dẫn SEO cho người mới bắt đầu</h3>
+          <div class="row"><span class="av-s">T</span><span class="muted">Trang · 1 giờ trước</span><span class="chev">›</span></div>
+          <div class="row" style="margin-top:8px"><span class="badge b-wait">Chờ duyệt</span><span class="seo" style="color:#92400E;border-color:#FCD34D">SEO 68</span></div>
+        </div>
+        <div class="card">
+          <h3>5 mẹo tối ưu tốc độ tải website</h3>
+          <div class="row"><span class="av-s">N</span><span class="muted">Ngọc · hôm nay</span><span class="chev">›</span></div>
+          <div class="row" style="margin-top:8px"><span class="badge b-wait">Chờ duyệt</span><span class="seo">SEO 85</span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 2. DETAIL / REVIEW -->
+  <div class="phone" id="detail">
+    <div class="cap">② Xem &amp; duyệt bài</div>
+    <div class="frame"><div class="status"></div><div class="scr" style="display:flex;flex-direction:column">
+      <div class="appbar"><span style="color:var(--int)">‹</span><span class="title">Xem bài</span><span class="badge b-wait" style="margin-left:auto">Chờ duyệt</span></div>
+      <div class="dtl" style="flex:1">
+        <div class="preview">
+          <h3 style="margin:0;font-size:16px">5 mẹo tối ưu tốc độ tải website</h3>
+          <div class="metaline"><span class="av-s">N</span> Ngọc · Bài viết · SEO 85</div>
+          <div class="imgph">🖼 Ảnh minh hoạ</div>
+          <p>Tốc độ tải trang ảnh hưởng trực tiếp tới trải nghiệm người dùng và thứ hạng SEO. Dưới đây là 5 mẹo…</p>
+          <p style="color:var(--tp)">— xem thêm nội dung —</p>
+        </div>
+        <div class="notefield">
+          <label class="muted" style="font-weight:600">Ghi chú khi trả lại (nếu có)</label>
+          <textarea placeholder="VD: bổ sung meta description trước khi đăng…"></textarea>
+        </div>
+      </div>
+      <div class="actionbar">
+        <button class="btn btn-ret">↩ Trả lại</button>
+        <button class="btn btn-app" onclick="location.href='#done'">✓ Duyệt</button>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 3. SUCCESS -->
+  <div class="phone" id="done">
+    <div class="cap">③ Đã duyệt (success)</div>
+    <div class="frame"><div class="status"></div><div class="scr">
+      <div class="appbar"><span class="title">Chờ duyệt</span><span class="badge b-wait" style="margin-left:auto">2</span></div>
+      <div class="center">
+        <div class="big">✅</div>
+        <b>Đã duyệt "5 mẹo tối ưu…"</b>
+        <p>Ngọc nhận thông báo. Bản ghi duyệt (bạn · bây giờ) đã lưu.<br>Bài sẵn sàng để xuất bản.</p>
+        <button class="btn btn-app">Về danh sách</button>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 4. EMPTY -->
+  <div class="phone">
+    <div class="cap">④ Không còn bài (empty)</div>
+    <div class="frame"><div class="status"></div><div class="scr">
+      <div class="appbar"><span class="title">Chờ duyệt</span><span class="badge b-ok" style="margin-left:auto">0</span></div>
+      <div class="center">
+        <div class="big">🎉</div>
+        <b>Không có bài nào chờ duyệt</b>
+        <p>Bạn đã duyệt hết. Quay lại sau nhé.</p>
+      </div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="annot">
+  <b>States đã thể hiện:</b> ① default (list) · ② detail/review · ③ success · ④ empty. &nbsp; <b>Còn thiếu (mô tả ở annotations):</b> loading skeleton, lỗi tải/mất mạng, trạng thái "đã trả lại kèm ghi chú". &nbsp; <b>Insight journey:</b> đây là đáy cảm xúc as-is (Bước 4) — luồng duyệt tối ưu cho thao tác 1 tay, ≤2 chạm để approve.
+</div>
+</body>
+</html>

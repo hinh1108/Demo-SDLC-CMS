@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prototype Index — VietCMS Wireframes v1</title>
+<style>
+  :root{--bg:#F9FAFB;--surface:#fff;--border:#E5E7EB;--t1:#1F2937;--t2:#6B7280;--tp:#9CA3AF;--int:#3B82F6;--int-2:#1D4ED8;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',sans-serif;background:var(--bg);color:var(--t1);}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 24px 64px;}
+  .head{margin-bottom:8px;}
+  .head h1{margin:0 0 6px;font-size:26px;}
+  .head p{margin:0;color:var(--t2);max-width:70ch;}
+  .flowbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin:20px 0 26px;font-size:13px;color:var(--t2);}
+  .flowbar .step{background:#DBEAFE;color:var(--int-2);padding:4px 10px;border-radius:999px;font-weight:600;}
+  .flowbar .arr{color:var(--tp);}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.06);display:flex;flex-direction:column;}
+  .thumb{height:130px;background:linear-gradient(135deg,#E5E7EB,#F3F4F6);display:flex;align-items:center;justify-content:center;font-size:40px;border-bottom:1px solid var(--border);}
+  .card .body{padding:16px;flex:1;display:flex;flex-direction:column;}
+  .card h3{margin:0 0 6px;font-size:16px;}
+  .card .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+  .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#F3F4F6;color:#4B5563;}
+  .tag.p{background:#DBEAFE;color:#1E40AF;}
+  .card p{margin:0 0 14px;font-size:13px;color:var(--t2);flex:1;}
+  .open{background:var(--int);color:#fff;text-align:center;text-decoration:none;padding:9px;border-radius:7px;font-size:13px;font-weight:600;}
+  .docs{margin-top:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+  .docs h2{margin:0 0 10px;font-size:15px;}
+  .docs a{color:var(--int);font-weight:600;text-decoration:none;}
+  .docs li{margin-bottom:6px;font-size:13.5px;}
+  .note{margin-top:22px;font-size:12px;color:var(--tp);border-top:1px solid var(--border);padding-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>🧭 VietCMS — Prototype Wireframe v1</h1>
+    <p>3 màn hình Must-have (MVP), mid-fi, bấm được. Greyscale + xanh tương tác — <b>chưa áp màu brand</b> (để review bố cục &amp; luồng, không bàn visual). Visual sẽ đến ở Phase 5.</p>
+  </div>
+
+  <div class="flowbar">
+    <span class="step">Soạn thảo</span><span class="arr">→ Gửi duyệt →</span>
+    <span class="step">Duyệt (mobile)</span><span class="arr">→ ✓ →</span>
+    <span class="step">Dashboard</span><span class="arr">↺ Việc cần duyệt</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="thumb">📝</div>
+      <div class="body">
+        <h3>Trình soạn thảo no-code</h3>
+        <div class="tags"><span class="tag p">US-01</span><span class="tag">Ngọc</span><span class="tag">Desktop</span></div>
+        <p>Kéo-thả block, tự lưu + versioning, panel SEO gắn trang, trợ lý AI. Màn hình trung tâm của biên tập viên.</p>
+        <a class="open" href="04-wireframe-editor-desktop-v1.html">Mở màn hình →</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="thumb">✅</div>
+      <div class="body">
+        <h3>Hàng chờ duyệt</h3>
+        <div class="tags"><span class="tag p">US-05/06</span><span class="tag">Hải</span><span class="tag">Mobile</span></div>
+        <p>Duyệt/trả lại kèm ghi chú, ≤2 chạm. 4 states: list · detail · success · empty. Giải đáy cảm xúc journey.</p>
+        <a class="open" href="04-wireframe-approval-mobile-v1.html">Mở màn hình →</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="thumb">🏠</div>
+      <div class="body">
+        <h3>Bảng điều khiển</h3>
+        <div class="tags"><span class="tag p">US-18</span><span class="tag">Hải</span><span class="tag">Desktop</span></div>
+        <p>KPI tổng quan, biểu đồ traffic, "việc cần duyệt", bảng nội dung gần đây. Điểm vào chính của trưởng phòng.</p>
+        <a class="open" href="04-wireframe-dashboard-desktop-v1.html">Mở màn hình →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="docs">
+    <h2>📎 Tài liệu đi kèm</h2>
+    <ul>
+      <li><a href="04-annotations-v1.md">04-annotations-v1.md</a> — hành vi component, validation, states &amp; edge case của 3 màn</li>
+      <li><a href="04-components-needed-v1.md">04-components-needed-v1.md</a> — checklist component bàn giao cho Phase 5 (UI Design)</li>
+      <li><a href="../02-define/02-ia-sitemap-v1.html">IA/Sitemap (Phase 2)</a> · <a href="../02-define/02-journey-tao-duyet-xuat-ban-v1.html">Journey (Phase 2)</a></li>
+    </ul>
+  </div>
+
+  <div class="note">VietCMS · Phase 4 Wireframe · v1.0 · 2026-07-20 · Input: Phase 2 (IA, journey, personas) + user stories Must-have. Bỏ qua Phase 3 (concept đã rõ từ BA docs).</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup: Bảng điều khiển — VietCMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary-50:#EFF5FF;--primary-100:#DBE8FE;--primary-200:#BFD6FE;--primary-500:#3B82F6;
+    --primary-600:#2563EB;--primary-700:#1D4ED8;--primary-800:#1E40AF;
+    --accent-600:#7C3AED;--accent-50:#F5F3FF;--accent-100:#EDE9FE;--accent-700:#6D28D9;
+    --n-0:#fff;--n-50:#F8FAFC;--n-100:#F1F5F9;--n-200:#E2E8F0;--n-300:#CBD5E1;--n-400:#94A3B8;
+    --n-500:#64748B;--n-600:#475569;--n-700:#334155;--n-800:#1E293B;--n-900:#0F172A;--n-950:#020617;
+    --success:#059669;--success-bg:#D1FAE5;--success-fg:#065F46;
+    --warning:#D97706;--warning-bg:#FEF3C7;--warning-fg:#92400E;
+    --error:#DC2626;--error-bg:#FEE2E2;--error-fg:#991B1B;--info-bg:#DBEAFE;--info-fg:#1E40AF;
+    --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --sh-sm:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);
+    --sh-md:0 4px 8px -2px rgba(15,23,42,.10),0 2px 4px -2px rgba(15,23,42,.06);
+    --focus:0 0 0 3px rgba(37,99,235,.35);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font);background:var(--n-100);color:var(--n-900);-webkit-font-smoothing:antialiased;font-size:14px;}
+  a{text-decoration:none;color:inherit;}
+  svg{display:block;}
+  .metabar{background:var(--n-950);color:#cbd5e1;font-size:12px;padding:6px 16px;display:flex;justify-content:space-between;gap:12px;}
+  .metabar a{color:#93C5FD;text-decoration:none;}
+  .app{display:grid;grid-template-columns:236px 1fr;min-height:calc(100vh - 29px);}
+
+  /* sidebar */
+  .side{background:var(--n-900);color:#cbd5e1;padding:16px 12px;display:flex;flex-direction:column;}
+  .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 16px;font-weight:700;color:#fff;font-size:16px;}
+  .brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--primary-500),var(--primary-700));display:grid;place-items:center;box-shadow:var(--sh-sm);}
+  .switch{background:#1E293B;border:1px solid #334155;border-radius:9px;padding:9px 12px;font-size:13px;display:flex;align-items:center;gap:9px;color:#e2e8f0;margin-bottom:16px;cursor:pointer;}
+  .switch .g{width:18px;height:18px;border-radius:5px;background:var(--success);display:grid;place-items:center;font-size:10px;color:#fff;}
+  .switch .chev{margin-left:auto;color:#94A3B8;}
+  .nav a{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:9px;font-size:13.5px;color:#cbd5e1;margin-bottom:2px;transition:.15s;}
+  .nav a:hover{background:#1E293B;color:#fff;}
+  .nav a.active{background:var(--primary-600);color:#fff;font-weight:600;}
+  .nav a svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .nav .sep{height:1px;background:#1E293B;margin:10px 4px;}
+  .userchip{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 8px;border-top:1px solid #1E293B;}
+  .userchip .av{width:32px;height:32px;border-radius:50%;background:var(--primary-600);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;}
+  .userchip .nm{font-size:13px;color:#fff;font-weight:600;}
+  .userchip .rl{font-size:11px;color:#94A3B8;}
+
+  /* main */
+  .main{padding:24px 30px;overflow:auto;}
+  .head{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
+  .head h1{font-size:22px;margin:0;letter-spacing:-.01em;}
+  .head .sub{color:var(--n-500);font-size:13px;margin-top:2px;}
+  .spacer{flex:1;}
+  .range{border:1px solid var(--n-200);background:var(--n-0);border-radius:9px;padding:9px 14px;font-size:13px;color:var(--n-600);cursor:pointer;box-shadow:var(--sh-sm);}
+  .btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--primary-600);color:#fff;border:none;border-radius:9px;padding:10px 16px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:var(--sh-sm);transition:.15s;}
+  .btn-primary:hover{background:var(--primary-700);}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+  .kpi{background:var(--n-0);border:1px solid var(--n-200);border-radius:14px;padding:18px;box-shadow:var(--sh-sm);transition:.15s;}
+  .kpi:hover{box-shadow:var(--sh-md);transform:translateY(-2px);}
+  .kpi .top{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+  .kpi .ico{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;}
+  .kpi .lbl{font-size:12.5px;color:var(--n-500);font-weight:500;}
+  .kpi .val{font-size:28px;font-weight:800;letter-spacing:-.02em;}
+  .kpi .delta{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:8px;}
+  .up{background:var(--success-bg);color:var(--success-fg);}
+  .down{background:var(--error-bg);color:var(--error-fg);}
+
+  .grid2{display:grid;grid-template-columns:1.65fr 1fr;gap:18px;margin-bottom:20px;}
+  .panel{background:var(--n-0);border:1px solid var(--n-200);border-radius:14px;padding:18px;box-shadow:var(--sh-sm);}
+  .panel h2{font-size:15px;margin:0 0 14px;display:flex;align-items:center;}
+  .panel h2 .link{margin-left:auto;font-size:12.5px;color:var(--primary-700);font-weight:600;}
+  .chart{height:200px;display:flex;align-items:flex-end;gap:9px;padding:8px 4px 0;}
+  .bar{flex:1;background:linear-gradient(180deg,var(--primary-500),var(--primary-200));border-radius:6px 6px 0 0;position:relative;transition:.15s;}
+  .bar:hover{background:linear-gradient(180deg,var(--primary-600),var(--primary-300));}
+  .xlbl{display:flex;gap:9px;padding-top:8px;}
+  .xlbl span{flex:1;text-align:center;font-size:10.5px;color:var(--n-400);}
+
+  .todo{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--n-100);}
+  .todo:last-of-type{border-bottom:none;}
+  .av-s{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0;}
+  .av-s.n{background:var(--primary-100);color:var(--primary-700);}
+  .av-s.t{background:#FDE68A;color:#92400E;}
+  .todo .t{font-size:13.5px;font-weight:500;}
+  .todo .m{font-size:11.5px;color:var(--n-500);}
+  .badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+  .b-wait{background:var(--warning-bg);color:var(--warning-fg);}
+  .b-ok{background:var(--success-bg);color:var(--success-fg);}
+  .b-draft{background:var(--info-bg);color:var(--info-fg);}
+  .todo-cta{display:block;text-align:center;margin-top:14px;color:var(--primary-700);font-size:13px;font-weight:600;padding:9px;border:1px solid var(--primary-200);border-radius:9px;background:var(--primary-50);transition:.15s;}
+  .todo-cta:hover{background:var(--primary-100);}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--n-500);padding:10px 12px;border-bottom:1px solid var(--n-200);}
+  td{padding:12px;border-bottom:1px solid var(--n-100);color:var(--n-800);}
+  tbody tr{transition:.12s;}
+  tbody tr:hover{background:var(--n-50);cursor:pointer;}
+  tbody tr:last-child td{border-bottom:none;}
+  .seo{font-size:11.5px;color:var(--n-600);border:1px solid var(--n-200);border-radius:7px;padding:2px 8px;font-weight:600;}
+  .author{display:inline-flex;align-items:center;gap:7px;}
+  .hint{font-size:12px;color:var(--n-400);margin-top:16px;display:flex;align-items:center;gap:6px;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+</style>
+</head>
+<body>
+<div class="metabar">
+  <span>Hi-fi Mockup · <b style="color:#fff">Bảng điều khiển</b> · US-18 · Hải (Trưởng phòng Marketing)</span>
+  <span>Design System Blue v1 · <a href="05-mockup-index.html">← Mockup index</a></span>
+</div>
+
+<div class="app">
+  <!-- sidebar -->
+  <aside class="side">
+    <div class="brand"><span class="logo"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#fff" stroke-width="2.2"><path d="M4 5l8 14 8-14"/></svg></span> VietCMS</div>
+    <div class="switch"><span class="g">✓</span> congty-abc.vn <span class="chev">▾</span></div>
+    <nav class="nav">
+      <a href="#" class="active"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg> Bảng điều khiển</a>
+      <a href="05-mockup-editor-desktop-v1.html"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg> Nội dung</a>
+      <a href="#"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg> SEO &amp; Hiệu năng</a>
+      <a href="05-mockup-approval-mobile-v1.html"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Duyệt &amp; Cộng tác</a>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg> Xuất bản</a>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H5.2L4 17.5z"/></svg> Lead &amp; Form</a>
+      <a href="#"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg> Phân tích</a>
+      <div class="sep"></div>
+      <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg> Cài đặt</a>
+    </nav>
+    <div class="userchip"><span class="av">H</span><div><div class="nm">Trần Minh Hải</div><div class="rl">Trưởng phòng · Admin</div></div></div>
+  </aside>
+
+  <!-- main -->
+  <main class="main">
+    <div class="head">
+      <div>
+        <h1>Chào Hải 👋</h1>
+        <div class="sub">Đây là tổng quan hoạt động nội dung 30 ngày qua.</div>
+      </div>
+      <span class="spacer"></span>
+      <span class="range">📅 30 ngày qua ▾</span>
+      <button class="btn-primary" onclick="location.href='05-mockup-editor-desktop-v1.html'">＋ Tạo nội dung</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi"><div class="top"><span class="ico" style="background:var(--primary-100)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-700)" stroke-width="1.8"><path d="M4 4h16v16H4zM8 9h8M8 13h6"/></svg></span><span class="lbl">Bài đã xuất bản</span></div><div><span class="val">248</span><span class="delta up">▲ 12%</span></div></div>
+      <div class="kpi"><div class="top"><span class="ico" style="background:var(--success-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success-fg)" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span class="lbl">Lượt truy cập</span></div><div><span class="val">54.2K</span><span class="delta up">▲ 8%</span></div></div>
+      <div class="kpi"><div class="top"><span class="ico" style="background:var(--accent-100)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-700)" stroke-width="1.8"><path d="M4 4h16v12H5.2L4 17.5z"/></svg></span><span class="lbl">Lead thu được</span></div><div><span class="val">312</span><span class="delta down">▼ 3%</span></div></div>
+      <div class="kpi"><div class="top"><span class="ico" style="background:var(--warning-bg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning-fg)" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></span><span class="lbl">Điểm SEO trung bình</span></div><div><span class="val">84</span><span class="delta up">▲ 5</span></div></div>
+    </div>
+
+    <div class="grid2">
+      <!-- chart -->
+      <div class="panel">
+        <h2>Lưu lượng truy cập <a class="link" href="#">Xem Phân tích →</a></h2>
+        <div class="chart">
+          <div class="bar" style="height:42%"></div><div class="bar" style="height:56%"></div>
+          <div class="bar" style="height:49%"></div><div class="bar" style="height:71%"></div>
+          <div class="bar" style="height:63%"></div><div class="bar" style="height:86%"></div>
+          <div class="bar" style="height:79%"></div><div class="bar" style="height:94%"></div>
+        </div>
+        <div class="xlbl"><span>T1</span><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>T8</span></div>
+      </div>
+
+      <!-- approval todo -->
+      <div class="panel">
+        <h2>Việc cần duyệt của tôi <span class="badge b-wait" style="margin-left:8px;position:static">3</span><a class="link" style="margin-left:auto" href="05-mockup-approval-mobile-v1.html">Tất cả →</a></h2>
+        <div class="todo"><span class="av-s n">N</span><div><div class="t">Ra mắt VietCMS 1.0</div><div class="m">Ngọc · 2 phút trước</div></div><span class="badge b-wait">Chờ duyệt</span></div>
+        <div class="todo"><span class="av-s t">T</span><div><div class="t">Hướng dẫn SEO cho người mới</div><div class="m">Trang · 1 giờ trước</div></div><span class="badge b-wait">Chờ duyệt</span></div>
+        <div class="todo"><span class="av-s n">N</span><div><div class="t">5 mẹo tối ưu tốc độ tải</div><div class="m">Ngọc · hôm nay</div></div><span class="badge b-wait">Chờ duyệt</span></div>
+        <a class="todo-cta" href="05-mockup-approval-mobile-v1.html">Mở hàng chờ duyệt →</a>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="panel">
+      <h2>Nội dung gần đây <a class="link" href="05-mockup-editor-desktop-v1.html">Quản lý nội dung →</a></h2>
+      <table>
+        <thead><tr><th>Tiêu đề</th><th>Tác giả</th><th>Trạng thái</th><th>SEO</th><th>Cập nhật</th></tr></thead>
+        <tbody>
+          <tr><td>Ra mắt VietCMS 1.0</td><td><span class="author"><span class="av-s n" style="width:22px;height:22px;font-size:9px">N</span>Ngọc</span></td><td><span class="badge b-wait" style="margin:0;position:static">Chờ duyệt</span></td><td><span class="seo">92</span></td><td style="color:var(--n-500)">2 phút trước</td></tr>
+          <tr><td>Chính sách nội dung website</td><td><span class="author"><span class="av-s" style="width:22px;height:22px;font-size:9px;background:var(--primary-600);color:#fff">H</span>Hải</span></td><td><span class="badge b-ok" style="margin:0;position:static">Đã xuất bản</span></td><td><span class="seo">85</span></td><td style="color:var(--n-500)">3 giờ trước</td></tr>
+          <tr><td>5 mẹo tối ưu tốc độ tải</td><td><span class="author"><span class="av-s n" style="width:22px;height:22px;font-size:9px">N</span>Ngọc</span></td><td><span class="badge b-draft" style="margin:0;position:static">Bản nháp</span></td><td><span class="seo">—</span></td><td style="color:var(--n-500)">hôm qua</td></tr>
+          <tr><td>Bảng giá dịch vụ 2026</td><td><span class="author"><span class="av-s t" style="width:22px;height:22px;font-size:9px">T</span>Trang</span></td><td><span class="badge b-ok" style="margin:0;position:static">Đã xuất bản</span></td><td><span class="seo">78</span></td><td style="color:var(--n-500)">2 ngày trước</td></tr>
+        </tbody>
+      </table>
+      <div class="hint">💡 Empty state: site mới chưa có dữ liệu → KPI hiển thị "—" + CTA "Tạo nội dung đầu tiên"; chart hiện trạng thái trống.</div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

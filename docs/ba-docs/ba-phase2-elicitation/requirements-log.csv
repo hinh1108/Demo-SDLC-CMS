@@ -1,0 +1,45 @@
+REQ_ID,Loai,Mo_ta,Nhu_cau_hay_Giai_phap,Nguon,Uu_tien_1_5,Trang_thai,Ghi_chu
+REQ-B01,Business,Giúp đội marketing tự chủ xuất bản nội dung không phụ thuộc lập trình viên,Nhu cầu,Pha1 Vision + As-is P1,1,Đề xuất,Mục tiêu cốt lõi của sản phẩm
+REQ-B02,Business,Đạt TCO thấp và minh bạch hơn WordPress-có-quản-trị và Webflow,Nhu cầu,Pha1 Business Case + Đối thủ insight 4,1,Đề xuất,Đòn định vị giá
+REQ-B03,Business,Tạo doanh thu định kỳ (MRR) từ mô hình SaaS,Nhu cầu,Pha1 Business Case,1,Đề xuất,
+REQ-B04,Business,Mở kênh agency/reseller white-label,Nhu cầu,Đối thủ insight 5,3,Đề xuất,Cân nhắc sau MVP
+REQ-U01,User,Biên tập viên tạo và phát hành trang/bài mà không cần code,Nhu cầu,As-is P1,1,Đề xuất,
+REQ-U02,User,Trưởng phòng duyệt nội dung trước khi xuất bản,Nhu cầu,As-is P8,1,Đề xuất,
+REQ-U03,User,Chuyên viên SEO tối ưu tiêu đề/meta/sitemap dễ dàng,Nhu cầu,As-is P3,2,Đề xuất,
+REQ-U04,User,Người không kỹ thuật tự dựng website hoàn chỉnh nhanh,Nhu cầu,Vision north-star,1,Đề xuất,Đo bằng thời gian xuất bản trang đầu
+REQ-U05,User,Agency quản lý nhiều site của nhiều khách trên một tài khoản,Nhu cầu,Đối thủ REQ14-15,3,Đề xuất,
+FR-G-001,Functional,Trình soạn thảo trực quan kéo-thả theo block/section,Giải pháp,Đối thủ REQ1,1,Đề xuất,Lõi no-code
+FR-G-002,Functional,Quản lý trang/bài viết/danh mục,Giải pháp,Best practice CMS,1,Đề xuất,
+FR-G-003,Functional,Thư viện media (ảnh/video) cơ bản,Giải pháp,Best practice CMS,2,Đề xuất,
+FR-G-004,Functional,Hỗ trợ landing page và form thu lead,Giải pháp,Đối thủ REQ13/24,2,Đề xuất,Lấp gap LadiPage
+FR-G-005,Functional,AI tạo site một-cú-nhấp từ mô tả doanh nghiệp,Giải pháp,Đối thủ REQ12,4,Đề xuất,Nên có nếu kịp
+FR-G-006,Functional,Kho template bản địa hoá theo ngành VN,Giải pháp,Đối thủ REQ17,3,Đề xuất,
+FR-G-007,Functional,Lên lịch xuất bản và staging/preview,Giải pháp,Đối thủ REQ20,3,Đề xuất,
+FR-W-001,Functional,Workflow tạo-duyệt-phát hành nội dung,Giải pháp,As-is P8,1,Đề xuất,
+FR-W-002,Functional,Phân quyền theo vai trò (admin/biên tập/cộng tác viên),Giải pháp,As-is P8,1,Đề xuất,
+FR-W-003,Functional,Quản lý đa site/workspace,Giải pháp,Đối thủ REQ14,2,Đề xuất,
+FR-W-004,Functional,White-label/multi-tenant billing cho reseller,Giải pháp,Đối thủ REQ15,5,Đề xuất,Tương lai
+FR-AI-001,Functional,AI viết nội dung thạo tiếng Việt (trang/blog/mô tả),Giải pháp,Đối thủ REQ8 + As-is P4,2,Đề xuất,Khác biệt chính
+FR-AI-002,Functional,AI SEO: tự tạo tiêu đề/meta/từ khoá/schema,Giải pháp,Đối thủ REQ9,2,Đề xuất,
+FR-AI-003,Functional,AEO - tối ưu hiển thị trên AI-search (ChatGPT/Gemini/Perplexity),Giải pháp,Đối thủ REQ10,4,Đề xuất,Đón đầu
+FR-AI-004,Functional,AI tạo/tối ưu ảnh + tự WebP,Giải pháp,Đối thủ REQ23,4,Đề xuất,
+FR-SEO-001,Functional,Quản lý metadata/thẻ SEO và tự sinh sitemap,Giải pháp,Đối thủ REQ9,1,Đề xuất,
+FR-SEO-002,Functional,Đa ngôn ngữ native (VN/EN + hreflang),Giải pháp,Đối thủ REQ16,3,Đề xuất,
+FR-INT-001,Functional,Tích hợp cổng thanh toán VN (VNPay/MoMo/ZaloPay),Giải pháp,Đối thủ REQ4,2,Đề xuất,Ít nhất 1 cổng cho MVP
+FR-INT-002,Functional,Tích hợp Zalo/Facebook/GA4/ad pixel/CRM,Giải pháp,Đối thủ REQ18,3,Đề xuất,
+FR-INT-003,Functional,API headless tuỳ chọn (REST/GraphQL),Giải pháp,Đối thủ REQ21,5,Đề xuất,Tương lai
+FR-PUB-001,Functional,Xuất bản site công khai với tên miền tuỳ chỉnh,Giải pháp,Scope Pha1,1,Đề xuất,
+FR-AN-001,Functional,Dashboard analytics tích hợp (traffic/SEO/chuyển đổi),Giải pháp,Đối thủ REQ22,3,Đề xuất,
+FR-ACC-001,Functional,Quản lý tài khoản/gói đăng ký và thanh toán định kỳ,Giải pháp,Mô hình SaaS,1,Đề xuất,
+FR-ACC-002,Functional,Gói free dùng được thật + giá VND minh bạch,Giải pháp,Đối thủ REQ5/7/19,2,Đề xuất,
+NFR-001,Non-functional,Lighthouse Performance >= 90 trên mobile cấu hình mặc định,Giải pháp,Scope Pha1 MT-04,1,Đề xuất,Output sạch/nhanh SSR+CDN
+NFR-002,Non-functional,Thời gian tự xuất bản trang đầu < 30 phút cho người mới,Giải pháp,Scope Pha1 MT-02,1,Đề xuất,Đo qua onboarding
+NFR-003,Non-functional,Kiến trúc multi-tenant ổn định cho nhiều khách hàng,Nhu cầu,Mô hình SaaS,1,Đề xuất,
+NFR-004,Non-functional,Bảo mật managed - người dùng không phải vá/cập nhật,Nhu cầu,As-is P2 + Đối thủ insight 2,1,Đề xuất,Wedge chống WordPress
+NFR-005,Non-functional,Tuân thủ bảo vệ dữ liệu cá nhân (NĐ 13/2023/NĐ-CP),Nhu cầu,Ràng buộc pháp lý Pha1,1,Đề xuất,
+NFR-006,Non-functional,Giao diện/tài liệu/hỗ trợ tiếng Việt đầy đủ,Nhu cầu,Đối thủ REQ3,1,Đề xuất,
+NFR-007,Non-functional,Uptime >= 99.5%/năm,Giải pháp,Best practice SaaS,2,Đề xuất,Cần xác nhận SLA
+OPEN-Q01,Open Question,Mức sẵn sàng chi trả thật của mid-market VN (gói nào/giá nào)?,-,Cần phỏng vấn (chưa có KH thật),-,Treo,BA chốt sau customer discovery; hạn: trước M1
+OPEN-Q02,Open Question,Ưu tiên thật giữa AI-content vs no-code-editor vs giá - đâu là yếu tố mua chính?,-,Cần phỏng vấn,-,Treo,Ảnh hưởng thứ tự build MVP
+OPEN-Q03,Open Question,MVP có cần thanh toán VN ngay hay để bản sau?,-,Mâu thuẫn: bản địa hoá vs ngân sách hạn chế,-,Treo,Sponsor + PO quyết
+CONFLICT-01,Conflict,Phạm vi rộng (đa tính năng AI/đa site) vs ràng buộc MVP nhanh-ngân sách hạn chế,-,Pha1 ràng buộc vs Đối thủ REQ,-,Treo,Xử lý bằng MoSCoW ở Pha 3

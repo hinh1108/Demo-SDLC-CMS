@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Trình soạn thảo no-code (Desktop)</title>
+<style>
+  :root{
+    --bg:#F9FAFB; --surface:#FFFFFF; --border:#E5E7EB; --line:#F3F4F6;
+    --t1:#1F2937; --t2:#6B7280; --tp:#9CA3AF;
+    --int:#3B82F6; --int-bg:#DBEAFE; --int-2:#1D4ED8;
+    --ai:#7C3AED; --ai-bg:#EDE9FE;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',sans-serif;background:var(--bg);color:var(--t1);}
+  a{color:inherit;}
+  .meta{background:#111827;color:#fff;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .meta a{color:#93C5FD;text-decoration:none;}
+  .app{display:grid;grid-template-columns:56px 210px 1fr 300px;height:calc(100vh - 34px);min-height:640px;}
+
+  /* icon rail */
+  .rail{background:#1F2937;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:6px;}
+  .rail .logo{width:32px;height:32px;border-radius:8px;background:#374151;color:#9CA3AF;display:grid;place-items:center;font-weight:700;margin-bottom:10px;}
+  .rail .ic{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;color:#9CA3AF;font-size:16px;}
+  .rail .ic.active{background:#374151;color:#fff;}
+
+  /* block palette */
+  .palette{background:var(--surface);border-right:1px solid var(--border);padding:14px 12px;overflow:auto;}
+  .palette h4{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--t2);margin:0 0 10px;}
+  .blk{border:1px dashed #D1D5DB;background:var(--line);border-radius:6px;padding:9px 10px;font-size:12.5px;color:var(--t2);margin-bottom:7px;display:flex;align-items:center;gap:8px;cursor:grab;}
+  .blk .g{color:var(--tp);}
+  .blk.ai{border-color:#C4B5FD;background:var(--ai-bg);color:var(--ai);}
+
+  /* top bar of canvas */
+  .work{display:flex;flex-direction:column;background:var(--bg);min-width:0;}
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;gap:12px;}
+  .crumb{font-size:12px;color:var(--t2);}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;background:#F3F4F6;color:#4B5563;border:1px solid #E5E7EB;}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:#9CA3AF;}
+  .save{font-size:12px;color:var(--t2);margin-left:4px;}
+  .spacer{flex:1;}
+  .btn{border-radius:6px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;}
+  .btn-ghost{background:transparent;color:var(--t1);border-color:var(--border);}
+  .btn-primary{background:var(--int);color:#fff;}
+
+  /* canvas */
+  .canvas-wrap{flex:1;overflow:auto;padding:24px;display:flex;justify-content:center;}
+  .canvas{width:100%;max-width:720px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:32px 40px;min-height:100%;}
+  .cblock{position:relative;border:1px solid transparent;border-radius:6px;padding:8px 10px;margin:2px 0;}
+  .cblock:hover{border-color:var(--int-bg);background:#F8FAFF;}
+  .cblock .handle{position:absolute;left:-22px;top:10px;color:var(--tp);font-size:13px;cursor:grab;}
+  .h-title{font-size:26px;font-weight:700;}
+  .p{color:#374151;line-height:1.7;font-size:15px;}
+  .imgph{background:linear-gradient(135deg,#E5E7EB,#F3F4F6);color:#9CA3AF;min-height:150px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;border:1px dashed #D1D5DB;}
+  .addblk{border:1px dashed var(--int);color:var(--int);background:#F5F9FF;border-radius:6px;padding:10px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;}
+
+  /* right panel */
+  .panel{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;min-width:0;}
+  .tabs{display:flex;border-bottom:1px solid var(--border);}
+  .tab{flex:1;text-align:center;padding:11px 4px;font-size:12.5px;font-weight:600;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;}
+  .tab.active{color:var(--int-2);border-bottom-color:var(--int);}
+  .tab.ai.active{color:var(--ai);border-bottom-color:var(--ai);}
+  .panel-body{padding:16px;overflow:auto;font-size:13px;}
+  .fld{margin-bottom:14px;}
+  .fld label{display:block;font-size:12px;font-weight:600;color:var(--t2);margin-bottom:5px;}
+  .inp{width:100%;border:1px solid #D1D5DB;border-radius:6px;padding:8px 10px;font-size:13px;color:var(--t1);background:#fff;}
+  .inp.area{min-height:60px;}
+  .hintc{font-size:11px;color:var(--tp);margin-top:4px;}
+  .seoscore{display:flex;align-items:center;gap:10px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:10px 12px;margin-bottom:14px;}
+  .seoscore .num{font-size:22px;font-weight:800;color:#92400E;}
+  .aibox{border:1px dashed #C4B5FD;background:var(--ai-bg);border-radius:8px;padding:12px;}
+  .aibox .btnai{background:var(--ai);color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12.5px;font-weight:600;cursor:pointer;width:100%;margin-top:8px;}
+  .sugg{background:#fff;border:1px solid #E5E7EB;border-radius:6px;padding:8px 10px;font-size:12px;margin-top:8px;display:flex;justify-content:space-between;gap:8px;align-items:center;}
+  .sugg .apply{color:var(--int);font-weight:600;cursor:pointer;white-space:nowrap;}
+  .note{position:absolute;background:#FBBF24;color:#78350F;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:700;}
+
+  /* error toast demo */
+  .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#FEE2E2;border:1px solid #FCA5A5;color:#991B1B;padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.1);display:flex;gap:8px;align-items:center;}
+</style>
+</head>
+<body>
+<div class="meta">
+  <span>Wireframe: <b>Trình soạn thảo no-code</b> · US-01 · Persona: Ngọc (Biên tập viên)</span>
+  <span>Mid-fi · Desktop · v1.0 · <a href="04-prototype-index.html">← Prototype index</a></span>
+</div>
+
+<div class="app">
+  <!-- icon rail (IA L1) -->
+  <div class="rail">
+    <div class="logo">V</div>
+    <div class="ic" title="Bảng điều khiển"><a href="04-wireframe-dashboard-desktop-v1.html" style="text-decoration:none;color:inherit">🏠</a></div>
+    <div class="ic active" title="Nội dung">📝</div>
+    <div class="ic" title="SEO">🔍</div>
+    <div class="ic" title="Duyệt">✅</div>
+    <div class="ic" title="Xuất bản">🚀</div>
+    <div class="ic" title="Lead">📮</div>
+    <div class="ic" title="Phân tích">📈</div>
+    <div class="ic" title="Cài đặt" style="margin-top:auto">⚙️</div>
+  </div>
+
+  <!-- block palette -->
+  <div class="palette">
+    <h4>Kéo block vào trang</h4>
+    <div class="blk"><span class="g">⠿</span> Tiêu đề</div>
+    <div class="blk"><span class="g">⠿</span> Đoạn văn</div>
+    <div class="blk"><span class="g">⠿</span> Ảnh</div>
+    <div class="blk"><span class="g">⠿</span> Nút (CTA)</div>
+    <div class="blk"><span class="g">⠿</span> Danh sách</div>
+    <div class="blk"><span class="g">⠿</span> Trích dẫn</div>
+    <div class="blk"><span class="g">⠿</span> Form liên hệ</div>
+    <div class="blk"><span class="g">⠿</span> Video nhúng</div>
+    <div class="blk ai"><span>✨</span> Khối AI viết</div>
+    <h4 style="margin-top:18px">Mẫu section</h4>
+    <div class="blk"><span class="g">▭</span> Hero</div>
+    <div class="blk"><span class="g">▭</span> 3 cột tính năng</div>
+  </div>
+
+  <!-- work canvas -->
+  <div class="work">
+    <div class="topbar">
+      <span class="crumb">Nội dung › Bài viết ›</span>
+      <span class="badge"><span class="dot"></span> Bản nháp</span>
+      <span class="save">☁ Đã tự lưu · 2 phút trước · <a href="#" style="color:var(--int)">Lịch sử phiên bản</a></span>
+      <span class="spacer"></span>
+      <button class="btn btn-ghost">👁 Xem trước</button>
+      <button class="btn btn-ghost">⏱ Lên lịch</button>
+      <button class="btn btn-primary" onclick="location.href='04-wireframe-approval-mobile-v1.html'" style="position:relative">Gửi duyệt →
+        <span class="note" style="top:-9px;right:-6px">US-05</span>
+      </button>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas">
+        <div class="cblock"><span class="handle">⠿</span><div class="h-title" contenteditable="false">5 mẹo tối ưu tốc độ tải website</div></div>
+        <div class="cblock"><span class="handle">⠿</span><div class="p">Tốc độ tải trang ảnh hưởng trực tiếp tới trải nghiệm người dùng và thứ hạng SEO. Dưới đây là 5 mẹo giúp website của bạn tải nhanh hơn…</div></div>
+        <div class="cblock"><span class="handle">⠿</span><div class="imgph">🖼 Ảnh minh hoạ — tự tối ưu WebP + CDN (US-02)</div></div>
+        <div class="cblock"><span class="handle">⠿</span><div class="p" style="color:#9CA3AF">Nhấp để soạn đoạn tiếp theo, hoặc kéo block từ bên trái…</div></div>
+        <div class="addblk">＋ Thêm block</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- right settings panel -->
+  <div class="panel">
+    <div class="tabs">
+      <div class="tab">Trang</div>
+      <div class="tab active">SEO</div>
+      <div class="tab ai">✨ AI</div>
+    </div>
+    <div class="panel-body">
+      <div class="seoscore">
+        <div class="num">68</div>
+        <div>Điểm SEO <span style="color:#92400E">· Cần cải thiện</span><br><span class="hintc" style="color:#92400E">Thiếu meta description</span></div>
+      </div>
+      <div class="fld">
+        <label>Tiêu đề SEO</label>
+        <input class="inp" value="5 mẹo tối ưu tốc độ tải website">
+        <div class="hintc">52/60 ký tự ✓</div>
+      </div>
+      <div class="fld">
+        <label>Meta description</label>
+        <textarea class="inp area" placeholder="Nhập mô tả cho công cụ tìm kiếm…"></textarea>
+        <div class="hintc" style="color:#DC2626">⚠ Chưa nhập — nên điền để tăng điểm SEO</div>
+      </div>
+      <div class="fld">
+        <label>Đường dẫn (slug)</label>
+        <input class="inp" value="/bai-viet/toi-uu-toc-do-tai">
+      </div>
+
+      <div class="aibox">
+        <b style="color:var(--ai);font-size:12.5px">✨ Trợ lý AI SEO (US-11)</b>
+        <div class="sugg">Meta: "Tăng tốc website với 5 mẹo…" <span class="apply">Áp dụng</span></div>
+        <div class="sugg">Thêm schema Article <span class="apply">Áp dụng</span></div>
+        <button class="btnai">Gợi ý thêm từ AI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  }));
+</script>
+</body>
+</html>

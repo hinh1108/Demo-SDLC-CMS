@@ -1,0 +1,1212 @@
+openapi: "3.1.0"
+info:
+  title: VietCMS API
+  version: "1.0.0"
+  description: >
+    REST API cho VietCMS — no-code Marketing CMS SaaS multi-tenant.
+    Tenant suy ra từ JWT claim `tenant_id`. Lỗi theo RFC 7807 (application/problem+json).
+    Xem 04-api-design-v1.md để biết conventions & error catalog.
+servers:
+  - url: https://api.vietcms.vn/v1
+    description: Production
+  - url: https://staging-api.vietcms.vn/v1
+    description: Staging
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Auth
+  - name: Me
+  - name: Users
+  - name: Sites
+  - name: Content
+  - name: Workflow
+  - name: Publishing
+  - name: SEO
+  - name: Media
+  - name: AI
+  - name: Billing
+  - name: Analytics
+  - name: Forms
+  - name: Public
+
+paths:
+  # ------------------------------------------------------------ AUTH
+  /auth/login:
+    post:
+      summary: Đăng nhập
+      operationId: login
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+      responses:
+        "200":
+          description: Cấp token
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+
+  /auth/refresh:
+    post:
+      summary: Làm mới access token
+      operationId: refreshToken
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+      responses:
+        "200":
+          description: Token mới
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /auth/invitations/accept:
+    post:
+      summary: Chấp nhận lời mời, đặt mật khẩu (BR-08)
+      operationId: acceptInvitation
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token: { type: string }
+                password: { type: string, format: password, minLength: 8 }
+      responses:
+        "200":
+          description: Kích hoạt thành công
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TokenPair" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  # ------------------------------------------------------------ ME
+  /me:
+    get:
+      summary: Hồ sơ người đăng nhập
+      operationId: getMe
+      tags: [Me]
+      responses:
+        "200":
+          description: Hồ sơ + vai trò + tenant
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  # ------------------------------------------------------------ USERS
+  /users:
+    get:
+      summary: Danh sách người dùng
+      operationId: listUsers
+      tags: [Users]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/UserStatus" } }
+      responses:
+        "200":
+          description: Danh sách
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/User" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      summary: Mời người dùng (US-07)
+      operationId: inviteUser
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, role]
+              properties:
+                email: { type: string, format: email }
+                role: { $ref: "#/components/schemas/RoleName" }
+      responses:
+        "201":
+          description: Đã mời (trạng thái pending)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/User" }
+        "402": { $ref: "#/components/responses/PlanLimitExceeded" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  /users/{id}:
+    parameters:
+      - $ref: "#/components/parameters/Id"
+    get:
+      summary: Chi tiết người dùng
+      operationId: getUser
+      tags: [Users]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/User" } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Cập nhật vai trò/trạng thái
+      operationId: updateUser
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role: { $ref: "#/components/schemas/RoleName" }
+                status: { $ref: "#/components/schemas/UserStatus" }
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/User" } } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      summary: Xoá người dùng
+      operationId: deleteUser
+      tags: [Users]
+      responses:
+        "204": { description: Đã xoá }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ------------------------------------------------------------ SITES
+  /sites:
+    get:
+      summary: Danh sách site
+      operationId: listSites
+      tags: [Sites]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/Site" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+    post:
+      summary: Tạo site (từ template hoặc AI builder — US-05)
+      operationId: createSite
+      tags: [Sites]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                template_id: { type: [string, "null"], format: uuid }
+                ai_prompt: { type: [string, "null"], description: "Mô tả doanh nghiệp để AI sinh site nháp" }
+      responses:
+        "201":
+          description: Đã tạo
+          content: { application/json: { schema: { $ref: "#/components/schemas/Site" } } }
+        "402": { $ref: "#/components/responses/PlanLimitExceeded" }
+
+  /sites/{site_id}:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+    get:
+      summary: Chi tiết site
+      operationId: getSite
+      tags: [Sites]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/Site" } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Cập nhật site
+      operationId: updateSite
+      tags: [Sites]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/Site" } } }
+
+  # ------------------------------------------------------------ CONTENT
+  /sites/{site_id}/contents:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+    get:
+      summary: Danh sách trang/bài (US-01)
+      operationId: listContents
+      tags: [Content]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+        - { name: kind, in: query, schema: { $ref: "#/components/schemas/ContentKind" } }
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/ContentStatus" } }
+        - { name: q, in: query, schema: { type: string }, description: "Tìm theo tiêu đề" }
+        - { name: sort, in: query, schema: { type: string, default: "-updated_at" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/Content" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+    post:
+      summary: Tạo nội dung
+      operationId: createContent
+      tags: [Content]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, title]
+              properties:
+                kind: { $ref: "#/components/schemas/ContentKind" }
+                title: { type: string, maxLength: 200 }
+                slug: { type: string }
+                template_id: { type: [string, "null"], format: uuid }
+      responses:
+        "201":
+          description: Đã tạo (draft)
+          content: { application/json: { schema: { $ref: "#/components/schemas/Content" } } }
+        "409": { $ref: "#/components/responses/SlugConflict" }
+
+  /contents/{content_id}:
+    parameters:
+      - $ref: "#/components/parameters/ContentId"
+    get:
+      summary: Chi tiết nội dung + phiên bản hiện tại
+      operationId: getContent
+      tags: [Content]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/ContentDetail" } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      summary: Cập nhật tiêu đề/slug/danh mục
+      operationId: updateContent
+      tags: [Content]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string, maxLength: 200 }
+                slug: { type: string, description: "Duy nhất trong site — BR-02" }
+                category_ids: { type: array, items: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/Content" } } }
+        "409": { $ref: "#/components/responses/SlugConflict" }
+    delete:
+      summary: Xoá nội dung
+      operationId: deleteContent
+      tags: [Content]
+      responses:
+        "204": { description: Đã xoá }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /contents/{content_id}/versions:
+    parameters:
+      - $ref: "#/components/parameters/ContentId"
+    get:
+      summary: Lịch sử phiên bản
+      operationId: listVersions
+      tags: [Content]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/ContentVersion" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+    post:
+      summary: Lưu (autosave) → tạo phiên bản mới (BR-01)
+      operationId: createVersion
+      tags: [Content]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [blocks]
+              properties:
+                blocks:
+                  type: array
+                  description: "Block model (ADR-005)"
+                  items: { $ref: "#/components/schemas/Block" }
+      responses:
+        "201":
+          description: Đã lưu phiên bản
+          content: { application/json: { schema: { $ref: "#/components/schemas/ContentVersion" } } }
+
+  /versions/{version_id}:
+    parameters:
+      - { name: version_id, in: path, required: true, schema: { type: string, format: uuid } }
+    get:
+      summary: Xem một phiên bản
+      operationId: getVersion
+      tags: [Content]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/ContentVersion" } } }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  # ------------------------------------------------------------ WORKFLOW
+  /contents/{content_id}/submission:
+    parameters:
+      - $ref: "#/components/parameters/ContentId"
+    post:
+      summary: Gửi duyệt (US-05)
+      operationId: submitForReview
+      tags: [Workflow]
+      responses:
+        "200":
+          description: Đã chuyển "Chờ duyệt", thông báo approver (BR-03)
+          content: { application/json: { schema: { $ref: "#/components/schemas/Content" } } }
+        "409":
+          description: Chưa cấu hình người duyệt (BR-04)
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+              example:
+                type: https://api.vietcms.vn/errors/approver-not-configured
+                title: Approver not configured
+                status: 409
+                detail: Trang web chưa có người duyệt. Admin cần thiết lập.
+
+  /approvals:
+    get:
+      summary: Hàng chờ duyệt của tôi (US-06)
+      operationId: listApprovalQueue
+      tags: [Workflow]
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending], default: pending } }
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Nội dung chờ tôi duyệt
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/Content" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+
+  /contents/{content_id}/approvals:
+    parameters:
+      - $ref: "#/components/parameters/ContentId"
+    get:
+      summary: Lịch sử duyệt
+      operationId: listApprovals
+      tags: [Workflow]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Approval" }
+    post:
+      summary: Duyệt hoặc từ chối kèm ghi chú (US-06)
+      operationId: decideApproval
+      tags: [Workflow]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [result]
+              properties:
+                result: { type: string, enum: [approved, rejected] }
+                note: { type: string, description: "Bắt buộc khi từ chối" }
+      responses:
+        "201":
+          description: Đã ghi nhận (lưu ai/khi nào)
+          content: { application/json: { schema: { $ref: "#/components/schemas/Approval" } } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  # ------------------------------------------------------------ PUBLISHING
+  /contents/{content_id}/publication:
+    parameters:
+      - $ref: "#/components/parameters/ContentId"
+    post:
+      summary: Xuất bản ngay hoặc lên lịch (US-14/15)
+      operationId: publishContent
+      tags: [Publishing]
+      parameters:
+        - { name: Idempotency-Key, in: header, required: false, schema: { type: string } }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scheduled_at: { type: [string, "null"], format: date-time, description: "Bỏ trống = xuất bản ngay; không được ở quá khứ" }
+      responses:
+        "200":
+          description: Đã xuất bản (đồng bộ)
+          content: { application/json: { schema: { $ref: "#/components/schemas/PublicationResult" } } }
+        "202":
+          description: Đã nhận (đang render/hoặc domain chưa sẵn sàng → subdomain tạm — BR-06)
+          content: { application/json: { schema: { $ref: "#/components/schemas/PublicationResult" } } }
+        "409":
+          description: Nội dung chưa được duyệt (BR-05)
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+              example:
+                type: https://api.vietcms.vn/errors/not-approved
+                title: Content not approved
+                status: 409
+                detail: Chỉ nội dung Đã duyệt mới được xuất bản.
+    delete:
+      summary: Gỡ xuất bản
+      operationId: unpublishContent
+      tags: [Publishing]
+      responses:
+        "204": { description: "Đã gỡ, về Draft, loại khỏi sitemap" }
+
+  # ------------------------------------------------------------ SEO
+  /contents/{content_id}/seo:
+    parameters:
+      - $ref: "#/components/parameters/ContentId"
+    get:
+      summary: Lấy metadata SEO
+      operationId: getSeo
+      tags: [SEO]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/SeoMeta" } } }
+    put:
+      summary: Cập nhật metadata SEO (US-09)
+      operationId: putSeo
+      tags: [SEO]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SeoMetaInput" }
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/SeoMeta" } } }
+
+  # ------------------------------------------------------------ MEDIA
+  /sites/{site_id}/media:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+    get:
+      summary: Thư viện media
+      operationId: listMedia
+      tags: [Media]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/Media" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+    post:
+      summary: Tải media (multipart) — tự tối ưu WebP (US-02)
+      operationId: uploadMedia
+      tags: [Media]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file: { type: string, format: binary }
+      responses:
+        "201":
+          description: Đã tải
+          content: { application/json: { schema: { $ref: "#/components/schemas/Media" } } }
+        "413": { $ref: "#/components/responses/BadRequest" }
+
+  # ------------------------------------------------------------ AI
+  /ai/content-generations:
+    post:
+      summary: Sinh nội dung tiếng Việt (US-10, BR-07)
+      operationId: generateAiContent
+      tags: [AI]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [prompt]
+              properties:
+                prompt: { type: string }
+                content_id: { type: [string, "null"], format: uuid }
+      responses:
+        "200":
+          description: Gợi ý (đã trừ hạn mức khi thành công)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [suggestion, quota_remaining]
+                properties:
+                  suggestion: { type: string }
+                  quota_remaining: { type: integer }
+        "402": { $ref: "#/components/responses/QuotaExceeded" }
+        "503":
+          description: Dịch vụ AI lỗi — giữ nội dung gốc, KHÔNG trừ hạn mức
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+
+  /ai/seo-suggestions:
+    post:
+      summary: Gợi ý tiêu đề/meta/từ khoá/schema (US-11)
+      operationId: generateSeoSuggestions
+      tags: [AI]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content_id]
+              properties:
+                content_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Danh sách gợi ý áp-một-chạm
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title: { type: string }
+                  description: { type: string }
+                  keywords: { type: array, items: { type: string } }
+                  schema_json: { type: object, additionalProperties: true }
+                  quota_remaining: { type: integer }
+        "402": { $ref: "#/components/responses/QuotaExceeded" }
+
+  /ai/usage:
+    get:
+      summary: Hạn mức AI còn lại
+      operationId: getAiUsage
+      tags: [AI]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quota_total: { type: integer }
+                  quota_used: { type: integer }
+                  quota_remaining: { type: integer }
+                  period_end: { type: string, format: date-time }
+
+  # ------------------------------------------------------------ BILLING
+  /plans:
+    get:
+      summary: Danh sách gói (công khai)
+      operationId: listPlans
+      tags: [Billing]
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Plan" }
+
+  /subscription:
+    get:
+      summary: Đăng ký hiện tại
+      operationId: getSubscription
+      tags: [Billing]
+      responses:
+        "200":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/Subscription" } } }
+    post:
+      summary: Chọn/đổi gói (US-19) → trả về payment intent
+      operationId: changeSubscription
+      tags: [Billing]
+      parameters:
+        - { name: Idempotency-Key, in: header, required: false, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [plan_id, gateway]
+              properties:
+                plan_id: { type: string, format: uuid }
+                gateway: { type: string, enum: [vnpay, momo, zalopay] }
+      responses:
+        "200":
+          description: Cần thanh toán → payment intent
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [subscription, payment_url]
+                properties:
+                  subscription: { $ref: "#/components/schemas/Subscription" }
+                  payment_url: { type: string, format: uri }
+
+  /invoices:
+    get:
+      summary: Lịch sử hoá đơn
+      operationId: listInvoices
+      tags: [Billing]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/Invoice" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+
+  /webhooks/payments/{gateway}:
+    parameters:
+      - { name: gateway, in: path, required: true, schema: { type: string, enum: [vnpay, momo, zalopay] } }
+    post:
+      summary: Webhook cổng thanh toán (idempotent, xác thực bằng chữ ký)
+      operationId: paymentWebhook
+      tags: [Billing]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        "200": { description: Đã xử lý }
+        "400": { $ref: "#/components/responses/BadRequest" }
+
+  # ------------------------------------------------------------ ANALYTICS
+  /sites/{site_id}/analytics:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+    get:
+      summary: Chuỗi số liệu theo thời gian (US-18)
+      operationId: getAnalytics
+      tags: [Analytics]
+      parameters:
+        - { name: from, in: query, required: true, schema: { type: string, format: date } }
+        - { name: to, in: query, required: true, schema: { type: string, format: date } }
+        - { name: metric, in: query, schema: { type: string, enum: [visits, seo, conversions], default: visits } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [metric, series]
+                properties:
+                  metric: { type: string }
+                  series:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date: { type: string, format: date }
+                        value: { type: number }
+
+  # ------------------------------------------------------------ FORMS / LEADS
+  /sites/{site_id}/forms:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+    get:
+      summary: Danh sách form
+      operationId: listForms
+      tags: [Forms]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Form" }
+    post:
+      summary: Tạo form
+      operationId: createForm
+      tags: [Forms]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fields]
+              properties:
+                fields: { type: array, items: { $ref: "#/components/schemas/FormField" } }
+      responses:
+        "201":
+          description: OK
+          content: { application/json: { schema: { $ref: "#/components/schemas/Form" } } }
+
+  /sites/{site_id}/leads:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+    get:
+      summary: Danh sách lead
+      operationId: listLeads
+      tags: [Forms]
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, pagination]
+                properties:
+                  data: { type: array, items: { $ref: "#/components/schemas/Lead" } }
+                  pagination: { $ref: "#/components/schemas/CursorPage" }
+
+  # ------------------------------------------------------------ PUBLIC
+  /public/sites/{site_id}/forms/{form_id}/submissions:
+    parameters:
+      - $ref: "#/components/parameters/SiteId"
+      - { name: form_id, in: path, required: true, schema: { type: string, format: uuid } }
+    post:
+      summary: Khách gửi biểu mẫu (công khai, captcha — BR-13, ND 13/2023)
+      operationId: submitPublicForm
+      tags: [Public]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, captcha_token, consent]
+              properties:
+                data: { type: object, additionalProperties: true }
+                captcha_token: { type: string }
+                consent: { type: boolean, description: "Đồng ý xử lý dữ liệu cá nhân" }
+      responses:
+        "201": { description: "Đã ghi nhận lead, thông báo chủ site" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "403":
+          description: Captcha sai / nghi spam
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+
+components:
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      schema: { type: string }
+      description: Con trỏ phân trang (opaque)
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, default: 20, maximum: 100, minimum: 1 }
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    SiteId:
+      name: site_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    ContentId:
+      name: content_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  schemas:
+    UserStatus: { type: string, enum: [pending, active, disabled] }
+    RoleName: { type: string, enum: [admin, manager, editor, contributor] }
+    ContentKind: { type: string, enum: [page, post] }
+    ContentStatus: { type: string, enum: [draft, review, approved, scheduled, published, archived] }
+
+    TokenPair:
+      type: object
+      required: [access_token, refresh_token, token_type, expires_in]
+      properties:
+        access_token: { type: string }
+        refresh_token: { type: string }
+        token_type: { type: string, const: Bearer }
+        expires_in: { type: integer, example: 900 }
+
+    Me:
+      type: object
+      required: [id, email, role, tenant_id]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        name: { type: string }
+        role: { $ref: "#/components/schemas/RoleName" }
+        tenant_id: { type: string, format: uuid }
+
+    User:
+      type: object
+      required: [id, email, role, status, created_at]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        email: { type: string, format: email }
+        name: { type: string }
+        role: { $ref: "#/components/schemas/RoleName" }
+        status: { $ref: "#/components/schemas/UserStatus" }
+        created_at: { type: string, format: date-time, readOnly: true }
+
+    Site:
+      type: object
+      required: [id, name, created_at]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        name: { type: string }
+        template_id: { type: [string, "null"], format: uuid }
+        created_at: { type: string, format: date-time, readOnly: true }
+
+    Content:
+      type: object
+      required: [id, site_id, kind, title, slug, status, updated_at]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        site_id: { type: string, format: uuid }
+        kind: { $ref: "#/components/schemas/ContentKind" }
+        title: { type: string, maxLength: 200 }
+        slug: { type: string }
+        status: { $ref: "#/components/schemas/ContentStatus" }
+        author: { $ref: "#/components/schemas/UserRef" }
+        seo_score: { type: [integer, "null"] }
+        scheduled_at: { type: [string, "null"], format: date-time }
+        updated_at: { type: string, format: date-time, readOnly: true }
+
+    ContentDetail:
+      allOf:
+        - $ref: "#/components/schemas/Content"
+        - type: object
+          properties:
+            current_version: { $ref: "#/components/schemas/ContentVersion" }
+            seo: { $ref: "#/components/schemas/SeoMeta" }
+
+    UserRef:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+
+    Block:
+      type: object
+      required: [type]
+      properties:
+        type: { type: string, example: paragraph, description: "heading|paragraph|image|button|list|quote|form|ai" }
+        props: { type: object, additionalProperties: true }
+        children:
+          type: array
+          items: { $ref: "#/components/schemas/Block" }
+
+    ContentVersion:
+      type: object
+      required: [id, content_id, blocks, author, created_at]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        content_id: { type: string, format: uuid }
+        blocks: { type: array, items: { $ref: "#/components/schemas/Block" } }
+        author: { $ref: "#/components/schemas/UserRef" }
+        created_at: { type: string, format: date-time, readOnly: true }
+
+    Approval:
+      type: object
+      required: [id, version_id, approver, result, created_at]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        version_id: { type: string, format: uuid }
+        approver: { $ref: "#/components/schemas/UserRef" }
+        result: { type: string, enum: [approved, rejected] }
+        note: { type: [string, "null"] }
+        created_at: { type: string, format: date-time, readOnly: true }
+
+    PublicationResult:
+      type: object
+      properties:
+        status: { $ref: "#/components/schemas/ContentStatus" }
+        public_url: { type: string, format: uri }
+        used_temp_subdomain: { type: boolean, description: "true nếu domain chưa sẵn sàng (BR-06)" }
+
+    SeoMetaInput:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        keywords: { type: string }
+        schema_json: { type: object, additionalProperties: true }
+
+    SeoMeta:
+      allOf:
+        - $ref: "#/components/schemas/SeoMetaInput"
+        - type: object
+          properties:
+            score: { type: [integer, "null"] }
+
+    Media:
+      type: object
+      required: [id, url, format, created_at]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        url: { type: string, format: uri }
+        format: { type: string, example: webp }
+        size_bytes: { type: integer }
+        created_at: { type: string, format: date-time, readOnly: true }
+
+    Plan:
+      type: object
+      required: [id, name, price_vnd, period, limits]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        price_vnd: { type: integer, description: "Đồng Việt Nam" }
+        period: { type: string, enum: [monthly, yearly] }
+        limits:
+          type: object
+          properties:
+            sites: { type: integer }
+            seats: { type: integer }
+            ai_quota: { type: integer }
+
+    Subscription:
+      type: object
+      required: [id, plan_id, status]
+      properties:
+        id: { type: string, format: uuid }
+        plan_id: { type: string, format: uuid }
+        status: { type: string, enum: [active, past_due, canceled, free] }
+        renews_at: { type: [string, "null"], format: date-time }
+
+    Invoice:
+      type: object
+      required: [id, amount_vnd, status, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        amount_vnd: { type: integer }
+        status: { type: string, enum: [paid, pending, failed, refunded] }
+        gateway: { type: string, enum: [vnpay, momo, zalopay] }
+        created_at: { type: string, format: date-time }
+
+    FormField:
+      type: object
+      required: [name, type]
+      properties:
+        name: { type: string }
+        label: { type: string }
+        type: { type: string, enum: [text, email, tel, textarea] }
+        required: { type: boolean, default: false }
+
+    Form:
+      type: object
+      required: [id, site_id, fields]
+      properties:
+        id: { type: string, format: uuid }
+        site_id: { type: string, format: uuid }
+        fields: { type: array, items: { $ref: "#/components/schemas/FormField" } }
+
+    Lead:
+      type: object
+      required: [id, form_id, data, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        form_id: { type: string, format: uuid }
+        data: { type: object, additionalProperties: true }
+        consent: { type: boolean }
+        created_at: { type: string, format: date-time }
+
+    CursorPage:
+      type: object
+      required: [next_cursor, has_more]
+      properties:
+        next_cursor: { type: [string, "null"] }
+        has_more: { type: boolean }
+
+    Problem:
+      type: object
+      required: [type, title, status]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        instance: { type: string }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field: { type: string }
+              message: { type: string }
+
+  responses:
+    BadRequest:
+      description: Tham số không hợp lệ
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    Unauthorized:
+      description: Thiếu/không hợp lệ xác thực
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    Forbidden:
+      description: Không đủ quyền (RBAC)
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    NotFound:
+      description: Không tìm thấy
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    Conflict:
+      description: Xung đột (vd email đã tồn tại)
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    SlugConflict:
+      description: Slug trùng trong site (BR-02)
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+          example:
+            type: https://api.vietcms.vn/errors/slug-conflict
+            title: Slug conflict
+            status: 409
+            detail: Đường dẫn đã tồn tại trong site.
+            errors: [{ field: slug, message: "Chọn slug khác." }]
+    QuotaExceeded:
+      description: Hết hạn mức AI (BR-07)
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+          example:
+            type: https://api.vietcms.vn/errors/quota-exceeded
+            title: AI quota exceeded
+            status: 402
+            detail: Đã hết hạn mức AI. Vui lòng nâng cấp gói.
+    PlanLimitExceeded:
+      description: Vượt hạn mức gói (BR-09)
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+          example:
+            type: https://api.vietcms.vn/errors/plan-limit-exceeded
+            title: Plan limit exceeded
+            status: 402
+            detail: Vượt số chỗ ngồi/site của gói. Vui lòng nâng cấp.
+    TooManyRequests:
+      description: Vượt giới hạn tần suất
+      headers:
+        Retry-After: { schema: { type: integer } }
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

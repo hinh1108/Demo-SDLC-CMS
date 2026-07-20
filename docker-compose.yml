@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: vietcms-pg
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pw}
+      POSTGRES_DB: vietcms
+    ports:
+      - "55432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Migrations tự apply lần init đầu (trước khi healthy)
+      - ./db/0001_init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - ./db/0002_auth.sql:/docker-entrypoint-initdb.d/02_auth.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d vietcms"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: vietcms-redis
+    ports:
+      - "56379:6379"
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./apps/api
+    # Pin tag (KHÔNG dùng 'latest' cho deploy)
+    image: vietcms/api:${API_TAG:-0.1.0}
+    container_name: vietcms-api
+    depends_on:
+      postgres:
+        condition: service_healthy   # đợi migrations + pg sẵn sàng
+    environment:
+      PORT: 3001
+      # App kết nối bằng role app_login (non-superuser → RLS thực thi)
+      DATABASE_URL: postgres://app_login:app_pw@postgres:5432/vietcms
+      # Dùng cho seed (role postgres). Password lấy từ env, KHÔNG hardcode.
+      ADMIN_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-pw}@postgres:5432/vietcms
+      # Secret BẮT BUỘC set qua env — compose sẽ fail nếu thiếu
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required (set trong .env hoặc shell)}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-15m}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+    ports:
+      - "3001:3001"
+    # Resource limits (MUST-DO) — honored bởi docker compose v2
+    deploy:
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: 256M
+        reservations:
+          memory: 128M
+    restart: unless-stopped
+    # Liveness/readiness đã khai trong Dockerfile HEALTHCHECK (/v1/health)
+
+volumes:
+  pgdata:

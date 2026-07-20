@@ -1,0 +1,32 @@
+Muc_tieu_BO,Yeu_cau_nghiep_vu_BRD,FR_ID,Use_Case,User_Story,MoSCoW,Test_case_goi_y
+OBJ-01,REQ-B01/REQ-U01,FR-G-001,UC-01,US-01,Must,TC-01 Tạo trang no-code lưu nháp có phiên bản
+OBJ-01,REQ-U01,FR-G-002,UC-01,US-01,Must,TC-02 Quản lý trang/bài/danh mục
+OBJ-01,REQ-B01,FR-G-003,UC-01,US-02,Should,TC-03 Upload media tối ưu WebP/CDN
+OBJ-03,REQ-B01,FR-G-004,UC-08,US-16,Should,TC-04 Tạo landing + form thu lead
+OBJ-01,REQ-B01,FR-G-006,UC-05,US-03,Could,TC-05 Tạo site từ template ngành
+OBJ-02,REQ-B01,FR-G-007,UC-03,US-15,Should,TC-06 Lên lịch xuất bản đúng giờ
+OBJ-02,REQ-U04,FR-G-005,UC-05,US-04,Could,TC-07 AI tạo site nháp từ mô tả
+OBJ-01,REQ-U02,FR-W-001,UC-02,US-05,Must,TC-08 Gửi duyệt chuyển trạng thái + thông báo
+OBJ-01,REQ-U02,FR-W-002,UC-02/UC-06,US-06/US-07,Must,TC-09 Phê duyệt/từ chối + phân quyền vai trò
+OBJ-03,REQ-U05,FR-W-003,UC-06,US-08,Could,TC-10 Quản lý đa site/workspace
+OBJ-03,REQ-B04,FR-W-004,UC-10,US-23,Won't,TC-11 White-label + billing tách khách (bản sau)
+OBJ-02,REQ-B01,FR-AI-001,UC-04,US-10,Should,TC-12 AI nội dung tiếng Việt + trừ hạn mức/lỗi
+OBJ-04,REQ-U03,FR-AI-002,UC-04,US-11,Should,TC-13 AI SEO đề xuất title/meta/schema
+OBJ-04,REQ-U03,FR-AI-003,UC-04,US-12,Could,TC-14 AEO đề xuất tối ưu AI-search
+OBJ-04,REQ-B01,FR-AI-004,UC-04,US-13,Could,TC-15 AI tạo ảnh WebP
+OBJ-04,REQ-U03,FR-SEO-001,UC-03,US-09,Must,TC-16 Metadata áp HTML + sitemap tự cập nhật
+OBJ-03,REQ-B01,FR-SEO-002,UC-10,US-21,Could,TC-17 Đa ngôn ngữ + hreflang
+OBJ-03,REQ-B02,FR-INT-001,UC-07,US-19,Should,TC-18 Thanh toán VNPay/MoMo/ZaloPay
+OBJ-03,REQ-B01,FR-INT-002,UC-08/UC-09,US-17,Could,TC-19 Tích hợp Zalo/FB/GA4/CRM đẩy sự kiện
+OBJ-03,REQ-B04,FR-INT-003,UC-10,US-22,Won't,TC-20 API headless theo scope (bản sau)
+OBJ-01,REQ-B01,FR-PUB-001,UC-03,US-14,Must,TC-21 Xuất bản 1-click + domain + fallback subdomain
+OBJ-03,REQ-B01,FR-AN-001,UC-09,US-18,Should,TC-22 Dashboard traffic/SEO/chuyển đổi + empty state
+OBJ-03,REQ-B03,FR-ACC-001,UC-07,US-19,Must,TC-23 Kích hoạt gói + hoá đơn + hạn mức; thất bại giữ gói cũ
+OBJ-02,REQ-B02,FR-ACC-002,UC-07,US-20,Should,TC-24 Free tier hạn mức rõ + gia hạn đúng giá
+OBJ-01,REQ-B02,NFR-001,-,US-14,Must,TC-25 Lighthouse >= 90 mobile
+OBJ-02,REQ-U04,NFR-002,-,US-01,Must,TC-26 Xuất bản trang đầu < 30 phút
+OBJ-03,REQ-B03,NFR-003,-,US-07,Must,TC-27 Cô lập dữ liệu multi-tenant
+OBJ-01,NFR-004,NFR-004,-,-,Must,TC-28 Người dùng không cần tự vá/cập nhật
+OBJ-01,NFR-005,NFR-005,-,US-16,Must,TC-29 Tuân thủ NĐ 13/2023 (đồng thuận/xoá dữ liệu)
+OBJ-01,NFR-006,NFR-006,-,-,Must,TC-30 Giao diện/hỗ trợ tiếng Việt đầy đủ
+OBJ-03,NFR-007,NFR-007,-,-,Should,TC-31 Uptime >= 99.5%/năm

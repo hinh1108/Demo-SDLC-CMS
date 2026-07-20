@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Information Architecture / Sitemap — VietCMS Admin</title>
+<style>
+  :root{
+    --primary-600:#2563EB; --primary-700:#1D4ED8; --primary-50:#EFF5FF; --primary-100:#DBE8FE; --primary-200:#BFD6FE;
+    --accent-600:#7C3AED; --accent-50:#F5F3FF; --accent-100:#EDE9FE;
+    --n-0:#fff; --n-50:#F8FAFC; --n-100:#F1F5F9; --n-200:#E2E8F0; --n-300:#CBD5E1;
+    --n-500:#64748B; --n-600:#475569; --n-700:#334155; --n-900:#0F172A;
+    --success:#059669; --warning:#D97706;
+    --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',sans-serif;
+    --shadow:0 1px 3px rgba(15,23,42,.08),0 1px 2px rgba(15,23,42,.04);
+    --shadow-md:0 4px 8px -2px rgba(15,23,42,.10),0 2px 4px -2px rgba(15,23,42,.06);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font);color:var(--n-900);background:var(--n-50);line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1240px;margin:0 auto;padding:32px 24px 64px;}
+  .head{background:linear-gradient(135deg,var(--primary-600),var(--primary-700));color:#fff;border-radius:16px;padding:28px 32px;margin-bottom:20px;box-shadow:var(--shadow);}
+  .head h1{margin:0 0 6px;font-size:28px;letter-spacing:-.02em;}
+  .head p{margin:0;opacity:.92;font-size:15px;max-width:75ch;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;align-items:center;font-size:12px;color:var(--n-600);}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid transparent;}
+  .p-ngoc{background:var(--primary-100);color:var(--primary-700);}
+  .p-hai{background:#D1FAE5;color:#065F46;}
+  .p-trang{background:#FEF3C7;color:#92400E;}
+  .p-ai{background:var(--accent-100);color:var(--accent-600);}
+  .p-must{background:#FEE2E2;color:#991B1B;}
+
+  .cols{columns:3;column-gap:20px;}
+  @media(max-width:1000px){.cols{columns:2;}}
+  @media(max-width:640px){.cols{columns:1;}}
+
+  .node{break-inside:avoid;background:#fff;border:1px solid var(--n-200);border-radius:14px;margin-bottom:20px;box-shadow:var(--shadow);overflow:hidden;}
+  .node > .top{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--n-50);border-bottom:1px solid var(--n-200);}
+  .node > .top .ic{width:34px;height:34px;border-radius:9px;background:var(--primary-600);color:#fff;display:grid;place-items:center;font-size:16px;flex-shrink:0;}
+  .node.ai > .top .ic{background:linear-gradient(135deg,var(--accent-600),#5B21B6);}
+  .node > .top .lbl{font-weight:700;font-size:15px;}
+  .node > .top .lvl{margin-left:auto;font-size:11px;color:var(--n-500);font-family:monospace;}
+  ul.tree{list-style:none;margin:0;padding:10px 16px 14px;}
+  ul.tree > li{padding:6px 0;font-size:14px;border-bottom:1px solid var(--n-100);}
+  ul.tree > li:last-child{border-bottom:none;}
+  ul.tree .sub{list-style:none;margin:6px 0 2px;padding:0 0 0 16px;border-left:2px solid var(--primary-100);}
+  ul.tree .sub li{font-size:12.5px;color:var(--n-600);padding:2px 0;}
+  .badges{display:inline-flex;gap:4px;flex-wrap:wrap;margin-left:6px;vertical-align:middle;}
+  .name{font-weight:500;}
+
+  .public-note{margin-top:8px;background:#fff;border:1px dashed var(--n-300);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);}
+  .public-note h3{margin:0 0 8px;font-size:15px;}
+  .public-note p{margin:0;font-size:13px;color:var(--n-600);}
+
+  .principles{margin-top:24px;background:var(--primary-50);border:1px solid var(--primary-200);border-radius:14px;padding:18px 22px;}
+  .principles h3{margin:0 0 10px;font-size:15px;color:var(--primary-700);}
+  .principles ol{margin:0;padding-left:20px;font-size:13.5px;color:var(--n-700);}
+  .principles li{margin-bottom:5px;}
+  .foot{margin-top:24px;font-size:12px;color:var(--n-500);border-top:1px solid var(--n-200);padding-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Information Architecture — VietCMS Admin</h1>
+    <p>Cấu trúc thông tin cho khu vực quản trị (Admin/Editor). Tổ chức theo <b>mental model của người dùng marketing</b> (nội dung → SEO → duyệt → xuất bản → đo lường), tối đa 3–4 cấp, MECE. Trợ lý AI xuyên suốt các khu vực.</p>
+  </div>
+
+  <div class="legend">
+    <b style="color:var(--n-700)">Persona chính:</b>
+    <span class="pill p-ngoc">✍️ Ngọc (Biên tập)</span>
+    <span class="pill p-hai">📊 Hải (Trưởng phòng/Admin)</span>
+    <span class="pill p-trang">🔍 Trang (SEO)</span>
+    <span class="pill p-ai">✨ AI xuyên suốt</span>
+    <span class="pill p-must">Must (MVP)</span>
+  </div>
+
+  <div class="cols">
+
+    <!-- 1 Dashboard -->
+    <div class="node">
+      <div class="top"><span class="ic">🏠</span><span class="lbl">1. Bảng điều khiển</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Tổng quan nhanh</span> <span class="badges"><span class="pill p-hai">Hải</span></span>
+          <ul class="sub"><li>Bài viết theo trạng thái</li><li>Việc cần duyệt của tôi</li><li>Chỉ số nổi bật (traffic/SEO)</li></ul>
+        </li>
+        <li><span class="name">Bắt đầu nhanh / Onboarding</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 2 Content -->
+    <div class="node">
+      <div class="top"><span class="ic">📝</span><span class="lbl">2. Nội dung</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Trang (Pages)</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span><span class="pill p-must">US-01</span></span></li>
+        <li><span class="name">Bài viết / Blog</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span></span></li>
+        <li><span class="name">Danh mục &amp; thẻ</span></li>
+        <li><span class="name">Thư viện Media</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span></span>
+          <ul class="sub"><li>Ảnh / video (tự WebP + CDN)</li><li>Tạo/tối ưu ảnh bằng AI <span class="pill p-ai">AI</span></li></ul>
+        </li>
+        <li><span class="name">Trình soạn thảo no-code</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span><span class="pill p-must">US-01</span></span>
+          <ul class="sub"><li>Kéo-thả block/section</li><li>Tự lưu + phiên bản</li><li>AI viết nội dung tiếng Việt <span class="pill p-ai">US-10</span></li><li>Panel SEO gắn trang <span class="pill p-trang">Trang</span></li><li>Xem trước (preview)</li></ul>
+        </li>
+        <li><span class="name">Template ngành</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 3 SEO -->
+    <div class="node">
+      <div class="top"><span class="ic">🔍</span><span class="lbl">3. SEO &amp; Hiệu năng</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Metadata &amp; thẻ SEO</span> <span class="badges"><span class="pill p-trang">Trang</span><span class="pill p-must">US-09</span></span>
+          <ul class="sub"><li>Title / description / OG</li><li>Chỉnh hàng loạt</li></ul>
+        </li>
+        <li><span class="name">Sitemap tự động</span> <span class="badges"><span class="pill p-trang">Trang</span></span></li>
+        <li><span class="name">Trợ lý AI SEO</span> <span class="badges"><span class="pill p-ai">US-11</span></span>
+          <ul class="sub"><li>Gợi ý tiêu đề/meta/từ khoá/schema</li><li>Điểm SEO thời gian thực</li></ul>
+        </li>
+        <li><span class="name">AEO — AI-search</span> <span class="badges"><span class="pill p-ai">US-12</span></span></li>
+        <li><span class="name">Core Web Vitals</span> <span class="badges"><span class="pill p-trang">Trang</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 4 Workflow -->
+    <div class="node">
+      <div class="top"><span class="ic">✅</span><span class="lbl">4. Duyệt &amp; Cộng tác</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Chờ duyệt của tôi</span> <span class="badges"><span class="pill p-hai">Hải</span><span class="pill p-must">US-06</span></span>
+          <ul class="sub"><li>Duyệt / trả lại kèm ghi chú</li><li>Tối ưu thao tác trên mobile</li></ul>
+        </li>
+        <li><span class="name">Nội dung của tôi &amp; trạng thái</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span><span class="pill p-must">US-05</span></span></li>
+        <li><span class="name">Lịch sử duyệt (audit trail)</span></li>
+      </ul>
+    </div>
+
+    <!-- 5 Publish -->
+    <div class="node">
+      <div class="top"><span class="ic">🚀</span><span class="lbl">5. Xuất bản</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Xuất bản một chạm</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span><span class="pill p-must">US-14</span></span></li>
+        <li><span class="name">Lịch xuất bản</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span></span></li>
+        <li><span class="name">Staging / Preview</span></li>
+        <li><span class="name">Tên miền &amp; SSL</span> <span class="badges"><span class="pill p-hai">Hải</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 6 Lead & Form -->
+    <div class="node">
+      <div class="top"><span class="ic">📮</span><span class="lbl">6. Lead &amp; Form</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Trình tạo form</span> <span class="badges"><span class="pill p-ngoc">Ngọc</span></span></li>
+        <li><span class="name">Danh sách lead</span> <span class="badges"><span class="pill p-hai">Hải</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 7 Analytics -->
+    <div class="node">
+      <div class="top"><span class="ic">📈</span><span class="lbl">7. Phân tích</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Traffic</span> <span class="badges"><span class="pill p-hai">Hải</span></span></li>
+        <li><span class="name">SEO &amp; thứ hạng</span> <span class="badges"><span class="pill p-trang">Trang</span></span></li>
+        <li><span class="name">Chuyển đổi</span> <span class="badges"><span class="pill p-hai">Hải</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 8 AI Assistant -->
+    <div class="node ai">
+      <div class="top"><span class="ic">✨</span><span class="lbl">8. Trợ lý AI</span><span class="lvl">xuyên suốt</span></div>
+      <ul class="tree">
+        <li><span class="name">Viết / tối ưu nội dung tiếng Việt</span> <span class="badges"><span class="pill p-ai">US-10</span></span></li>
+        <li><span class="name">Gợi ý SEO / AEO</span> <span class="badges"><span class="pill p-ai">US-11/12</span></span></li>
+        <li><span class="name">Tạo / tối ưu ảnh</span> <span class="badges"><span class="pill p-ai">US-13</span></span></li>
+        <li><span class="name">Tạo site nháp từ mô tả</span> <span class="badges"><span class="pill p-ai">US-04</span></span></li>
+      </ul>
+    </div>
+
+    <!-- 9 Workspace -->
+    <div class="node">
+      <div class="top"><span class="ic">🗂️</span><span class="lbl">9. Đa site / Workspace</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Chuyển đổi site</span> <span class="badges"><span class="pill p-hai">Hải</span></span></li>
+        <li><span class="name">Quản lý nhiều site</span> <span class="badges">Could · US-08</span></li>
+      </ul>
+    </div>
+
+    <!-- 10 Settings -->
+    <div class="node">
+      <div class="top"><span class="ic">⚙️</span><span class="lbl">10. Cài đặt</span><span class="lvl">L1</span></div>
+      <ul class="tree">
+        <li><span class="name">Người dùng &amp; vai trò</span> <span class="badges"><span class="pill p-hai">Hải</span><span class="pill p-must">US-07</span></span>
+          <ul class="sub"><li>Mời thành viên (theo seat)</li><li>Vai trò: Admin / Biên tập / Cộng tác viên</li></ul>
+        </li>
+        <li><span class="name">Gói &amp; thanh toán</span> <span class="badges"><span class="pill p-hai">Hải</span><span class="pill p-must">US-19</span></span>
+          <ul class="sub"><li>VNPay / MoMo / ZaloPay</li><li>Giá VND minh bạch, hoá đơn</li></ul>
+        </li>
+        <li><span class="name">Tích hợp</span> <span class="badges">US-17</span>
+          <ul class="sub"><li>Zalo · Facebook · GA4 · Ad pixel · CRM</li></ul>
+        </li>
+        <li><span class="name">Hồ sơ &amp; bảo mật</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="public-note">
+    <h3>🌐 Site công khai (Public rendering) — tách khỏi Admin</h3>
+    <p>Đầu ra do hệ thống render (SSR/static + CDN, Core Web Vitals ≥ 90): Trang chủ · Trang nội dung/landing · Blog + trang danh mục · Form liên hệ. Đây là <b>sản phẩm</b> của quy trình admin ở trên, không phải một mục trong menu quản trị.</p>
+  </div>
+
+  <div class="principles">
+    <h3>Nguyên tắc IA đã áp dụng</h3>
+    <ol>
+      <li><b>Theo mental model marketing</b> — nhóm theo vòng đời nội dung (soạn → SEO → duyệt → xuất bản → đo), không theo cấu trúc kỹ thuật nội bộ.</li>
+      <li><b>MECE</b> — mỗi chức năng thuộc đúng một khu vực; không trùng lặp, không thiếu so với 23 user stories.</li>
+      <li><b>Độ sâu cân bằng</b> — tối đa 3–4 cấp; trình soạn thảo là nơi hội tụ (editor + AI + SEO panel) để giảm nhảy màn.</li>
+      <li><b>Ngôn ngữ người dùng</b> — "Nội dung", "Duyệt", "Xuất bản" thay vì jargon ("CMS entity", "workflow engine").</li>
+      <li><b>AI xuyên suốt</b>, không nhốt vào một menu — hiện trong ngữ cảnh (soạn thảo, SEO, media), nhận diện bằng màu accent.</li>
+      <li>⚠️ Cần <b>validate bằng card sort</b> với biên tập viên/SEO thật ở Phase kiểm thử.</li>
+    </ol>
+  </div>
+
+  <div class="foot">
+    VietCMS · Phase 2 Define · IA/Sitemap v1.0 · 2026-07-20 · Truy vết
+    <code>docs/ba-docs/ba-phase3-requirements-design/user-stories.md</code> ·
+    Personas: <a href="02-persona-bien-tap-vien-v1.md">Ngọc</a> · <a href="02-persona-truong-phong-marketing-v1.md">Hải</a> · <a href="02-persona-chuyen-vien-seo-v1.md">Trang</a>
+  </div>
+</div>
+</body>
+</html>

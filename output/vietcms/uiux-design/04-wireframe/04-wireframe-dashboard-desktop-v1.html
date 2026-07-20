@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Bảng điều khiển (Desktop)</title>
+<style>
+  :root{
+    --bg:#F9FAFB; --surface:#FFFFFF; --border:#E5E7EB; --line:#F3F4F6;
+    --t1:#1F2937; --t2:#6B7280; --tp:#9CA3AF; --int:#3B82F6; --int-2:#1D4ED8;
+    --ok:#059669; --ok-bg:#D1FAE5; --warn-bg:#FEF3C7;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans',sans-serif;background:var(--bg);color:var(--t1);}
+  a{color:inherit;text-decoration:none;}
+  .meta{background:#111827;color:#fff;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .meta a{color:#93C5FD;}
+  .app{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 34px);}
+
+  /* sidebar */
+  .side{background:#1F2937;color:#cbd5e1;padding:14px 10px;}
+  .side .brand{display:flex;align-items:center;gap:9px;padding:6px 8px 14px;font-weight:700;color:#fff;}
+  .side .brand .logo{width:30px;height:30px;border-radius:7px;background:#374151;display:grid;place-items:center;}
+  .side .site{background:#374151;border-radius:7px;padding:8px 10px;font-size:12.5px;display:flex;align-items:center;gap:8px;margin-bottom:12px;color:#e5e7eb;}
+  .side .site .chev{margin-left:auto;color:#9CA3AF;}
+  .nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;font-size:13.5px;color:#cbd5e1;margin-bottom:2px;}
+  .nav a.active{background:#374151;color:#fff;font-weight:600;}
+  .nav a .ic{width:18px;text-align:center;}
+
+  /* main */
+  .main{padding:20px 26px;overflow:auto;}
+  .head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .head h1{font-size:20px;margin:0;}
+  .head .spacer{flex:1;}
+  .range{border:1px solid var(--border);background:#fff;border-radius:7px;padding:7px 12px;font-size:13px;color:var(--t2);}
+  .btn-primary{background:var(--int);color:#fff;border:none;border-radius:7px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .kpi .lbl{font-size:12px;color:var(--t2);margin-bottom:6px;}
+  .kpi .val{font-size:26px;font-weight:800;}
+  .kpi .delta{font-size:11.5px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--ok-bg);color:#065F46;}
+  .kpi .delta.down{background:#FEE2E2;color:#991B1B;}
+
+  .grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px;}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;}
+  .panel h2{font-size:14px;margin:0 0 12px;display:flex;align-items:center;}
+  .panel h2 .link{margin-left:auto;font-size:12px;color:var(--int);font-weight:600;}
+  .chart{height:180px;background:linear-gradient(180deg,#F0F6FF,#fff);border:1px dashed #BFD6FE;border-radius:8px;display:flex;align-items:flex-end;gap:6px;padding:14px;}
+  .bar{flex:1;background:#BFD6FE;border-radius:4px 4px 0 0;}
+
+  .todo{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .todo:last-child{border-bottom:none;}
+  .av-s{width:24px;height:24px;border-radius:50%;background:#E5E7EB;color:#6B7280;display:grid;place-items:center;font-size:10px;font-weight:700;}
+  .todo .t{font-size:13px;}
+  .todo .m{font-size:11px;color:var(--t2);}
+  .badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:auto;}
+  .b-wait{background:var(--warn-bg);color:#92400E;}
+  .b-ok{background:var(--ok-bg);color:#065F46;}
+  .b-draft{background:#DBEAFE;color:#1E40AF;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--t2);padding:8px 10px;border-bottom:1px solid var(--border);background:var(--line);}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);}
+  .seo{font-size:11px;border:1px solid var(--border);border-radius:6px;padding:1px 6px;color:var(--t2);}
+  .note{background:#FBBF24;color:#78350F;font-size:10px;padding:1px 6px;border-radius:10px;font-weight:700;margin-left:6px;}
+</style>
+</head>
+<body>
+<div class="meta">
+  <span>Wireframe: <b>Bảng điều khiển</b> · US-18 · Persona: Hải (Trưởng phòng Marketing)</span>
+  <span>Mid-fi · Desktop · v1.0 · <a href="04-prototype-index.html">← Prototype index</a></span>
+</div>
+
+<div class="app">
+  <!-- sidebar (IA L1) -->
+  <aside class="side">
+    <div class="brand"><span class="logo">V</span> VietCMS</div>
+    <div class="site">🌐 congty-abc.vn <span class="chev">▾</span></div>
+    <nav class="nav">
+      <a href="#" class="active"><span class="ic">🏠</span> Bảng điều khiển</a>
+      <a href="04-wireframe-editor-desktop-v1.html"><span class="ic">📝</span> Nội dung</a>
+      <a href="#"><span class="ic">🔍</span> SEO &amp; Hiệu năng</a>
+      <a href="04-wireframe-approval-mobile-v1.html"><span class="ic">✅</span> Duyệt &amp; Cộng tác</a>
+      <a href="#"><span class="ic">🚀</span> Xuất bản</a>
+      <a href="#"><span class="ic">📮</span> Lead &amp; Form</a>
+      <a href="#"><span class="ic">📈</span> Phân tích</a>
+      <a href="#" style="margin-top:12px"><span class="ic">⚙️</span> Cài đặt</a>
+    </nav>
+  </aside>
+
+  <!-- main -->
+  <main class="main">
+    <div class="head">
+      <h1>Chào Hải 👋</h1>
+      <span class="spacer"></span>
+      <span class="range">📅 30 ngày qua ▾</span>
+      <button class="btn-primary" onclick="location.href='04-wireframe-editor-desktop-v1.html'">＋ Tạo nội dung</button>
+    </div>
+
+    <!-- KPIs (US-18) -->
+    <div class="kpis">
+      <div class="kpi"><div class="lbl">Bài viết đã xuất bản</div><div class="val">248</div><span class="delta">▲ 12%</span></div>
+      <div class="kpi"><div class="lbl">Lượt truy cập</div><div class="val">54.2K</div><span class="delta">▲ 8%</span></div>
+      <div class="kpi"><div class="lbl">Lead thu được</div><div class="val">312</div><span class="delta down">▼ 3%</span></div>
+      <div class="kpi"><div class="lbl">Điểm SEO trung bình</div><div class="val">84</div><span class="delta">▲ 5</span></div>
+    </div>
+
+    <div class="grid2">
+      <!-- traffic chart -->
+      <div class="panel">
+        <h2>Lưu lượng truy cập <span class="link">Xem Phân tích →</span></h2>
+        <div class="chart">
+          <div class="bar" style="height:40%"></div><div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:48%"></div><div class="bar" style="height:70%"></div>
+          <div class="bar" style="height:62%"></div><div class="bar" style="height:85%"></div>
+          <div class="bar" style="height:78%"></div><div class="bar" style="height:92%"></div>
+        </div>
+      </div>
+
+      <!-- approval todo (links to approval) -->
+      <div class="panel">
+        <h2>Việc cần duyệt của tôi <span class="link"><a href="04-wireframe-approval-mobile-v1.html">Tất cả →</a></span></h2>
+        <div class="todo"><span class="av-s">N</span><div><div class="t">Ra mắt VietCMS 1.0</div><div class="m">Ngọc · 2 phút trước</div></div><span class="badge b-wait">Chờ duyệt</span></div>
+        <div class="todo"><span class="av-s">T</span><div><div class="t">Hướng dẫn SEO cho người mới</div><div class="m">Trang · 1 giờ trước</div></div><span class="badge b-wait">Chờ duyệt</span></div>
+        <div class="todo"><span class="av-s">N</span><div><div class="t">5 mẹo tối ưu tốc độ tải</div><div class="m">Ngọc · hôm nay</div></div><span class="badge b-wait">Chờ duyệt</span></div>
+        <div style="text-align:center;margin-top:10px"><a href="04-wireframe-approval-mobile-v1.html" style="color:var(--int);font-size:12.5px;font-weight:600">Mở hàng chờ duyệt<span class="note">US-06</span></a></div>
+      </div>
+    </div>
+
+    <!-- recent content table -->
+    <div class="panel">
+      <h2>Nội dung gần đây <span class="link"><a href="04-wireframe-editor-desktop-v1.html">Quản lý nội dung →</a></span></h2>
+      <table>
+        <thead><tr><th>Tiêu đề</th><th>Tác giả</th><th>Trạng thái</th><th>SEO</th><th>Cập nhật</th></tr></thead>
+        <tbody>
+          <tr><td>Ra mắt VietCMS 1.0</td><td>Ngọc</td><td><span class="badge b-wait">Chờ duyệt</span></td><td><span class="seo">92</span></td><td>2 phút trước</td></tr>
+          <tr><td>Chính sách nội dung website</td><td>Hải</td><td><span class="badge b-ok">Đã xuất bản</span></td><td><span class="seo">85</span></td><td>3 giờ trước</td></tr>
+          <tr><td>5 mẹo tối ưu tốc độ tải</td><td>Ngọc</td><td><span class="badge b-draft">Bản nháp</span></td><td><span class="seo">—</span></td><td>hôm qua</td></tr>
+          <tr><td>Bảng giá dịch vụ 2026</td><td>Trang</td><td><span class="badge b-ok">Đã xuất bản</span></td><td><span class="seo">78</span></td><td>2 ngày trước</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p style="font-size:12px;color:var(--tp);margin-top:16px">💡 Empty state (mô tả ở annotations): site chưa có dữ liệu → KPI hiển thị "—" + hướng dẫn "Tạo nội dung đầu tiên"; chart hiển thị trạng thái trống.</p>
+  </main>
+</div>
+</body>
+</html>
