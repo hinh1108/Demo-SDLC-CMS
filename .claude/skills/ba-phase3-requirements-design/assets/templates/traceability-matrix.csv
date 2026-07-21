@@ -1,0 +1,5 @@
+Req_ID,Mo_ta_yeu_cau,Loai,Muc_tieu_NV(BO),UseCase_Story_ID,Uu_tien_MoSCoW,Test_Case_ID,Trang_thai
+BR-01,Vi du: Khach hang dat hang online,Business,BO-01,US-001,Must,TC-001,Draft
+FR-01,Vi du: Them san pham vao gio hang,Functional,BO-01,US-001,Must,TC-002,Draft
+FR-02,Vi du: Gui email xac nhan don hang,Functional,BO-01,US-003,Should,TC-005,Draft
+NFR-01,Vi du: Trang thanh toan tai duoi 2 giay,NonFunctional,BO-02,US-005,Should,TC-010,Draft

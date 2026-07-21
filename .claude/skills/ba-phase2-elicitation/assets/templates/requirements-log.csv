@@ -1,0 +1,4 @@
+Req_ID,Mo_ta_nhu_cau,Loai(Business/User/Functional/NonFunctional),La_nhu_cau_hay_giai_phap,Nguon(Ai_Buoi),Uu_tien_so_bo(MoSCoW),Mau_thuan_voi,Trang_thai
+REQ-001,Vi du: Khach can xem trang thai don hang theo thoi gian thuc,User,Nhu cau,Phong van KH-A 2026-06-01,Must,,New
+REQ-002,Vi du: He thong gui email xac nhan khi dat hang,Functional,Nhu cau,Workshop 2026-06-02,Should,,New
+REQ-003,Vi du: Trang tai duoi 2 giay,NonFunctional,Nhu cau,Phong van IT,Should,,New
